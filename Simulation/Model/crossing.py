@@ -5,6 +5,7 @@ from Queue import Queue
 # Class representing a crossing in the model.
 # It contains the location in the grid and queues for every direction.
 
+
 class Crossing:
 
     # Generate empty crossing

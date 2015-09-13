@@ -7,6 +7,7 @@ Everything related to memory is included in this file.
 Both a queue representing an agent's memory as well as chunks are implemented here.
 """
 
+
 # Class for memories
 class Memory:
 

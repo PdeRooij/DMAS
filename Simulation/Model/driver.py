@@ -5,6 +5,7 @@ from memory import Memory
 # Class simulating a driver.
 # Each driver has a (unique) ID, a history (memory)
 
+
 class Driver:
 
     # Spawn driver with specified id and empty memory

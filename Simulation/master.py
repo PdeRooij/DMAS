@@ -1,4 +1,9 @@
+#!usr/bin/python
+
 __author__ = 'tom, stef, pieter'
+
+from Model.model import Model
+from Interface.gui import GUI
 
 """
 This class contains the main loop of the simulation.
@@ -17,14 +22,31 @@ class Simulation:
 
     # Initialize the simulation
     def __init__(self):
-        pass
+        # Build model and interface
+        self.model = Model()
+        self.gui = GUI()
+
+        # Initiate zeroth cycle
+        self.cycle = 0
 
     # Run the simulation
     def run(self):
-        pass
+        # For as long as the number of cycles specified in the parameters
+        max_cycles = self.model.parameters.get('max_cycles')
+        while self.cycle < max_cycles:
+            self.model.update()
+            self.gui.update()
+
+        # Here something to analyze emergence?
+        # It could be a separate method
+        analysis = True
+        while analysis:
+            # Make false to end analysis
+            analysis = False
 
     # Perhaps something to leave the user a neat and tidy system
     def quit(self):
+        # Teehee! I got you good! Not doin' nothin'... or do I?
         pass
 
 # Initialize a simulation instance and call its run function

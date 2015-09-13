@@ -3,6 +3,7 @@ __author__ = 'tom, stef, pieter'
 # A container of set variables for a simulation.
 # It is implemented as a dictionary, where a specific parameter name is the key.
 
+
 class Parameters:
 
     # Creates a new set of parameters with standard values.
@@ -21,3 +22,10 @@ class Parameters:
     # value has to be verified BEFORE passing onto this method.
     def set(self, param, value):
         self.param[param] = value
+
+    # Override standard print to list all parameters
+    def __str__(self):
+        print '%%%%%%%%%%%%%%%%%%%%%%' + '\nParameters\n' + '%%%%%%%%%%%%%%%%%%%%%%'
+        print 'parameter', '\t', 'value'
+        for key, value in self.param.iteritems():
+            print key + '\t' + value

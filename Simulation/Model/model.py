@@ -10,6 +10,7 @@ It holds the parameters of a specific simulation
 and keeps track of a cycle's state.
 """
 
+
 class Model:
 
     # Prepare the model
@@ -20,9 +21,8 @@ class Model:
         self.drivers = []
         n = self.parameters.get('n_drivers')
         while n > 0:
-            #TODO fill list of drivers with appropriate amount
-            self.drivers.append(Driver())
-            n-=1
+            self.drivers.append(Driver('driver' + n))
+            n -= 1
 
         # Spawn crossings
         dim = self.parameters.get('grid_size')
@@ -33,9 +33,9 @@ class Model:
             col = dim[1]
             while col > 0:
                 cr_row.append(Crossing())
-                col-=1
-            row-=1
+                col -= 1
+            row -= 1
 
-    # A procedure to update the model a cycle
+    # A procedure to update the model to the next cycle
     def update(self):
         pass
