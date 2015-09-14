@@ -32,7 +32,8 @@
 from . import OSC
 import socket, os, time, errno, sys
 from threading import Lock
-from kivy.logger import Logger
+#from kivy.logger import Logger
+# TODO new logger
 try:
     # multiprocessing support is not good on window
     if sys.platform in ('win32', 'cygwin'):
@@ -40,12 +41,12 @@ try:
     use_multiprocessing = True
     from multiprocessing import Process, Queue, Value
     import multiprocessing.synchronize
-    Logger.info('OSC: using <multiprocessing> for socket')
+    #Logger.info('OSC: using <multiprocessing> for socket')
 except:
     use_multiprocessing = False
     from collections import deque
     from threading import Thread
-    Logger.info('OSC: using <thread> for socket')
+    #Logger.info('OSC: using <thread> for socket')
 
 # globals
 outSocket      = 0
@@ -215,14 +216,15 @@ class OSCServer(_OSCServer):
 
                 # special handle for EADDRINUSE
                 if error == errno.EADDRINUSE:
-                    Logger.error('OSC: Address %s:%i already in use, retry in 2 second' % (self.ipAddr, self.port))
+                    #Logger.error('OSC: Address %s:%i already in use, retry in 2 second' % (self.ipAddr, self.port))
+                    pass
                 else:
                     self.haveSocket = False
 
                 # sleep 2 second before retry
                 time.sleep(2)
 
-        Logger.info('OSC: listening for Tuio on %s:%i' % (self.ipAddr, self.port))
+        #Logger.info('OSC: listening for Tuio on %s:%i' % (self.ipAddr, self.port))
 
         while self.isRunning:
             try:
@@ -231,7 +233,7 @@ class OSCServer(_OSCServer):
             except Exception as e:
                 if type(e) == socket.timeout:
                     continue
-                Logger.exception('OSC: Error in Tuio recv()')
+                #Logger.exception('OSC: Error in Tuio recv()')
                 return 'no data arrived'
 
 def listen(ipAddr='127.0.0.1', port=9001):
@@ -242,7 +244,7 @@ def listen(ipAddr='127.0.0.1', port=9001):
     thread_id = '%s:%d' % (ipAddr, port)
     if thread_id in oscThreads:
         return
-    Logger.debug('OSC: Start thread <%s>' % thread_id)
+    #Logger.debug('OSC: Start thread <%s>' % thread_id)
     oscThreads[thread_id] = OSCServer(ipAddr=ipAddr, port=port)
     oscThreads[thread_id].start()
     return thread_id
@@ -258,10 +260,10 @@ def dontListen(thread_id = None):
         ids = list(oscThreads.keys())
     for thread_id in ids:
         #oscThreads[thread_id].socket.close()
-        Logger.debug('OSC: Stop thread <%s>' % thread_id)
+        #Logger.debug('OSC: Stop thread <%s>' % thread_id)
         oscThreads[thread_id].isRunning = False
         oscThreads[thread_id].join()
-        Logger.debug('OSC: Stop thread <%s> finished' % thread_id)
+        #Logger.debug('OSC: Stop thread <%s> finished' % thread_id)
         del oscThreads[thread_id]
 
 if __name__ == '__main__':
