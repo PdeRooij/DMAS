@@ -1,0 +1,49 @@
+[21:57] <NumesSanguis> hey kived, I've been experimenting with osc, but I'm running into some errors
+[21:57] <NumesSanguis> I got this example running: https://github.com/tshirtman/kivy_service_osc
+[21:58] <NumesSanguis> but now I'm trying to get osc working without kivy. but what exactly does Kivy use of osc? Kivy says about external library: oscAPI (modified / optimized)
+[21:58] <NumesSanguis> so are a non-kivy osc and osc even compatible?
+[22:03] * EthPyth (~kaos@ABayonne-552-1-52-66.w92-149.abo.wanadoo.fr) has left #kivy
+[22:05] <kived> should be, the purpose of the osc support is for tuio (which runs over osc)
+[22:05] <kived> if you'd like, you can always copy the lib from kivy and use it
+[22:06] <kived> the only part of kivy which the lib uses directly is the logger (and you could easily just replace Logger with your own python logging instance)
+[22:07] * Raoul11 (~orly@178.162.197.210) Quit (Quit: Leaving)
+[22:09] <NumesSanguis> I tried to pip install python-osc, but came across the following errors:
+[22:09] <NumesSanguis> https://github.com/attwad/python-osc/issues/25
+[22:10] <kived> that implementation states that it is for python 3.4+
+[22:10] <kovak> py2.7 doesn't have asyncio
+[22:10] <kived> hence the errors regarding 'yield from' and asyncio
+[22:10] <kived> just copy the kivy one
+[22:11] <NumesSanguis> ah I got confused with that you said that it's compatible with Python 2.7, but you meant the Kivy one right?
+[22:11] <kived> yes. kivy.lib.osc.OSC and kivy.lib.osc.oscAPI
+[22:12] * duikboot (~arjend@2a02:a446:66ae:0:a11:96ff:fe4d:c7cc) has joined #kivy
+[22:12] <NumesSanguis> that makes sense
+[22:13] <kived> you should keep that issue open
+[22:14] <kived> they should fix the setup.py to tell you it doesn't support py2 ;)
+[22:14] <NumesSanguis> haha :p
+[22:14] <NumesSanguis> they probably get a notice of it ;)
+[22:14] <NumesSanguis> I actually have Python 3.4 on my system as well, but pip automatically put's it in Python 2.7
+[22:14] * chozabu_ (~chozabu@53.71.200.146.dyn.plus.net) Quit (Remote host closed the connection)
+[22:15] * cparlette (~cparlette@static-108-48-124-82.washdc.fios.verizon.net) Quit (Quit: Sleep)
+[22:15] <kived> you can generally use pip3 to install for py3 (but that means your app also needs to run py3 ofc)
+[22:15] <kived> but you don't need this lib anyway :)
+[22:15] <NumesSanguis> building to windows for Python 3 is still experimental, so it's safer to stick with Python 2.7
+[22:16] <NumesSanguis> I don't need the lib because I'm using kivy's lib? :p
+[22:16] <kived> oh yeah, sorry. on windows it's different, you would need to have the py3 portable package instead
+[22:16] <kived> yeah, you don't need that lib if you use the implementation in kivy
+[22:17] <NumesSanguis> I want to make a part of my code Kivy independent, so I need to :/ want to be able to run it without GUI
+[22:17] <NumesSanguis> but I'm getting the .lib from kivy
+[22:18] * Haudegen (~quassel@85.124.51.57) Quit (Ping timeout: 240 seconds)
+[22:18] <kived> well you can import the osc stuff without creating a window (though importing from kivy will modify some logger settings)
+[22:19] <kived> or, like i suggested earlier, just copy those two files and replace the kivy logger used in oscAPI.py with another python logger
+[22:19] <NumesSanguis> yeah going to try that suggestion, any recommendations for a logger? only used print statements so far :p
+[22:19] <kived> those two files are LGPL (as we got them from another project)
+[22:19] <kived> import logging
+* Retrieving #kivy modes...
+[22:20] <kived> you can just use print statements if you'd like, or removing the logging completely
+[22:20] <kived> but the best thing would be to integrate it with a logger you're using for your cli app already (you ARE using one, right? :P)
+[22:20] <NumesSanguis> the client app still has to be written :p
+[22:21] <kived> if the client app is in kivy, then it can just use the kivy logger
+[22:21] <NumesSanguis> it is only a small scale private project for an course assignment, so have to spend time wisely between learning proper logging and getting it to work before the deadline :p
+[22:21] <NumesSanguis> the GUI is completely in kivy if you mean that?
+[22:21] <kived> https://docs.python.org/2/howto/logging.html
+[22:22] <NumesSanguis> thx :p

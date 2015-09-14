@@ -1,1 +1,1 @@
-osc: pip install python-osc
+Kivy for GUI
