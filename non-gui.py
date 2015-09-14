@@ -3,8 +3,7 @@
 
 __author__ = 'tom, stef, pieter'
 
-from model.model import Model # from Model.model
-from interface.gui import GUIApp as GUI  # from Interface.gui
+from model import Model
 
 """
 This class contains the main loop of the simulation.
@@ -24,9 +23,8 @@ class Simulation():
     # Initialize the simulation
     def __init__(self):
         print("\nInit master...")
-        # Build model and interface
+        # Build model
         self.model = Model()
-        self.gui = GUI()
 
         # Initiate zeroth cycle
         self.cycle = 0
