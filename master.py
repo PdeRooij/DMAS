@@ -1,9 +1,10 @@
+
 #!usr/bin/python
 
 __author__ = 'tom, stef, pieter'
 
-from Model.model import Model
-from Interface.gui import GUI
+from model.model import Model # from Model.model
+from interface.gui import GUI  # from Interface.gui
 
 """
 This class contains the main loop of the simulation.

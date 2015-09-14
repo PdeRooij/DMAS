@@ -21,7 +21,7 @@ class Model:
         self.drivers = []
         n = self.parameters.get('n_drivers')
         while n > 0:
-            self.drivers.append(Driver('driver' + n))
+            self.drivers.append(Driver('driver' + str(n)))
             n -= 1
 
         # Spawn crossings
