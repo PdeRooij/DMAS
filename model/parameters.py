@@ -4,13 +4,13 @@ __author__ = 'tom, stef, pieter'
 # It is implemented as a dictionary, where a specific parameter name is the key.
 
 
-class Parameters:
-
+class Parameters():
     # Creates a new set of parameters with standard values.
     def __init__(self):
-        self.param = {'n_drivers': 25,
+        print("Init Parameters...")
+        self.param = {'n_drivers': 2,
                       'grid_size': [3, 3],
-                      'max_cycles': 1000
+                      'max_cycles': 10
                       }
 
     # Returns setting of specified parameter
@@ -25,7 +25,7 @@ class Parameters:
 
     # Override standard print to list all parameters
     def __str__(self):
-        print '%%%%%%%%%%%%%%%%%%%%%%' + '\nParameters\n' + '%%%%%%%%%%%%%%%%%%%%%%'
-        print 'parameter', '\t', 'value'
+        print('%%%%%%%%%%%%%%%%%%%%%%\nParameters\n%%%%%%%%%%%%%%%%%%%%%%')
+        print('parameter\tvalue')
         for key, value in self.param.iteritems():
-            print key + '\t' + value
+            print("{}\t{}".format(key, value))

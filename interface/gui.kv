@@ -1,0 +1,21 @@
+#:kivy 1.9.1
+
+BoxLayout:
+    orientation: 'horizontal'
+
+    GridLayout:
+        size_hint_x: 0.8
+        canvas.before:
+            Color:
+                rgba: .6, 1, .6, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        cols: 2
+        rows: 2
+
+
+    Label:
+        size_hint_x: 0.2
+        text: "Hello world"

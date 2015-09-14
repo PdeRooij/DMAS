@@ -1,23 +1,23 @@
 __author__ = 'tom, stef, pieter'
 
-import Tkinter  # Should we want to use Tkinter, here is a template
+from kivy.app import App
 
 """
 The super file which is above and beyond everything happening visually.
 Of course a multi-line comment is only justified if it contains multiple lines.
 """
 
-class GUI:
 
+class GUIApp(App):
     # Class for graphical shizzle.
     # It is initialized by a master call and updated every cycle.
 
     # Initialize grid and such
-    def __init__(self):
-        self.top = Tkinter.Tk()
-        # Code to add widgets will go here...
-        self.top.mainloop()
+    def build(self):
+        self.title = "Traffic simulator"
 
-    # An update for every cycle?
     def update(self):
         pass
+
+if __name__ == '__main__':
+    GUIApp().run()

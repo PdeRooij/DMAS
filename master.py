@@ -4,7 +4,7 @@
 __author__ = 'tom, stef, pieter'
 
 from model.model import Model # from Model.model
-from interface.gui import GUI  # from Interface.gui
+from interface.gui import GUIApp as GUI  # from Interface.gui
 
 """
 This class contains the main loop of the simulation.
@@ -16,13 +16,14 @@ and runs it in cycles while handling the transitions between those.
 "These are the functions to rule them all."
 ############################
 
-class Simulation:
 
+class Simulation():
     # Class containing the entire simulation.
     # Everything is run by a subsequent call by this class.
 
     # Initialize the simulation
     def __init__(self):
+        print("\nInit master...")
         # Build model and interface
         self.model = Model()
         self.gui = GUI()
@@ -32,11 +33,18 @@ class Simulation:
 
     # Run the simulation
     def run(self):
+        print("\n    Simulation started    ")
+        # Start GUI Kivy
+        self.gui.run()
+        print("Do I come here?")
+
         # For as long as the number of cycles specified in the parameters
         max_cycles = self.model.parameters.get('max_cycles')
+        print("Max cycles: {}".format(max_cycles))
         while self.cycle < max_cycles:
             self.model.update()
             self.gui.update()
+            self.cycle += 1
 
         # Here something to analyze emergence?
         # It could be a separate method

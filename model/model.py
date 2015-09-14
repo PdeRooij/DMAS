@@ -11,10 +11,10 @@ and keeps track of a cycle's state.
 """
 
 
-class Model:
-
+class Model():
     # Prepare the model
     def __init__(self):
+        print("Init Model...")
         self.parameters = Parameters()
 
         # Spawn drivers
