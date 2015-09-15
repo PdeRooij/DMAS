@@ -4,6 +4,8 @@ from kivy.app import App
 from kivy.lib import osc
 from kivy.clock import Clock
 from kivy.properties import BooleanProperty
+from kivy.utils import platform
+platform = platform()
 
 """
 The super file which is above and beyond everything happening visually.
@@ -19,6 +21,10 @@ class GUIApp(App):
     # Initialize grid and such
     def build(self):
         self.title = "Traffic simulator"
+
+        # Android
+        self.service = None
+        self.start_service()
 
         # osc messages init
         osc.init()
@@ -38,6 +44,13 @@ class GUIApp(App):
         if not self.server_running:
             print("Simulation server not running")
             self.root.ids.label.text = "Simulation server not running :(\n"
+
+    def start_service(self):
+        if platform == 'android':
+            from android import AndroidService
+            service = AndroidService('Agent emergence service', 'running')
+            service.start('service started')
+            self.service = service
 
     def update(self):
         pass
