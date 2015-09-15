@@ -3,8 +3,24 @@
 BoxLayout:
     orientation: 'horizontal'
 
-    GridLayout:
+#    # For simulating agents
+#    GridLayout:
+#        # Green background
+#        size_hint_x: 0.8
+#        canvas.before:
+#            Color:
+#                rgba: .6, 1, .6, 1
+#            Rectangle:
+#                pos: self.pos
+#                size: self.size
+#
+#        cols: 2
+#        rows: 2
+
+    # Printing hello world
+    ScrollView:
         size_hint_x: 0.8
+        # Green background
         canvas.before:
             Color:
                 rgba: .6, 1, .6, 1
@@ -12,10 +28,30 @@ BoxLayout:
                 pos: self.pos
                 size: self.size
 
-        cols: 2
-        rows: 2
+        Label:
+            id: label
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: self.texture_size[1]
+            text_size: self.size[0], None
 
 
-    Label:
+    BoxLayout:
+        orientation: 'vertical'
         size_hint_x: 0.2
-        text: "Hello world"
+
+        Button:
+            size_hint_y: 0.2
+            text: 'Start' if app.start_simu == True else 'Stop'
+            disabled: not app.server_running
+            on_release: app.start_simulation()
+
+        Button:
+            size_hint_y: 0.2
+            text: 'clear'
+            disabled: not app.server_running
+            on_press: label.text = ''
+
+        Label:
+            size_hint_y: 0.6
+            text: "Hello world"

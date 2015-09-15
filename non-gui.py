@@ -15,7 +15,7 @@ class ClientServerApp():
         self.start_simulation()
         while True:
             osc.readQueue(oscid)
-            sleep(0.5)
+            #sleep(0.5)
 
     def start_simulation(self, *args):
         print("PERMISSION GRANTED: Simulation start!")

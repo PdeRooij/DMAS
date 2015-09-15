@@ -60,8 +60,10 @@ class osc_message():
         # Receive start/stop message
         osc.bind(oscid, self.startquit, '/start')
         self.can_start = False
-        # Hello world messages
+        # Send status of simulation
         osc.bind(oscid, self.send_hello, '/hello')
+        # Hello world messages
+        osc.bind(oscid, self.simulation_status_send, '/simu-status_ask')
 
         # Init actual model
         #self.sim = Simulation()
@@ -73,19 +75,22 @@ class osc_message():
         self.max_cycles = self.model.parameters.get('max_cycles')
         print("Max cycles: {}".format(self.max_cycles))
 
+        # Send server is running
+        self.simulation_status_send()
+
         # Code always running / waiting for instructions
         while True:
             print("Current cycle: {}".format(self.cycle))
             osc.readQueue(oscid)
             # Only run simulation when started and max cycles not reached
             #print("Start: {}, Max Cycles: {}".format(self.can_start, self.max_cycles))
-            if self.can_start == True and self.cycle <= self.max_cycles:
+            if self.can_start == True and self.cycle < self.max_cycles:
                 #self.sim.run()
 
                 # Hello world test
                 self.send_hello()
+                self.cycle += 1
 
-            self.cycle += 1
             sleep(0.5)
 
     def startquit(self, can_start, *args):
@@ -94,6 +99,11 @@ class osc_message():
         else:
             print("\n    Simulation ended    ")
         self.can_start = can_start[2]
+        self.cycle = 0
+
+    def simulation_status_send(self, *args):
+        print("Send simulation status")
+        osc.sendMsg('/simu-status', [self.can_start, ], port=3002)
 
     def send_hello(self, *args):
         print("sending hello...")
