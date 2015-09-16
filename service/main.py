@@ -2,7 +2,7 @@
 
 __author__ = 'tom, stef, pieter'
 
-import osc
+import osc  # from kivy.lib import osc
 from time import sleep
 from model import Model
 
