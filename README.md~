@@ -4,7 +4,7 @@ Repository of our project for the course Design of Multi-Agent Systems. This sim
 # START
 1. python model/master.py  (This is the server running the simulation)
 2. python non-gui.py       (Script version to call/listen agent simulation)
-2. python gui.py           (GUI version to call/listen agent simulation)
+2. python gui.py           (GUI version to call/listen agent simulation, *needs Kivy*)
 
 # Kivy install Ubuntu
 1. sudo add-apt-repository ppa:kivy-team/kivy-daily  # Latest Kivy

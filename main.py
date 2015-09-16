@@ -55,10 +55,16 @@ class GUIApp(App):
     def update(self):
         pass
 
+    def on_pause(self):
+        # Keep the app running when minimizing app
+        return True
+
     def on_stop(self):
-        # send message to let server stop sending message to here
-        pass
-    
+        # On Android, stop service
+        self.service.stop()
+        self.service = None
+
+    # Tells the server to start/stop the agent simulation
     def start_simulation(self, *args):
         if self.start_simu == True:
             print("PERMISSION GRANTED: Simulation start!")
@@ -71,12 +77,14 @@ class GUIApp(App):
             osc.sendMsg('/start', [self.start_simu, ], port=3000)
             self.start_simu = True
 
+    # Receive whether the service and/or simulation is running
     def simulation_status_receive(self, message, *args):
         print("Simulation status: {}".format(message[2]))
         self.root.ids.label.text = "Simulation server running!!!\n"
         self.start_simu = not message[2]
         self.server_running = True
 
+    # Print out the received message "Hello world"
     def output_hello(self, message, *args):
         print("Received: {}".format(message[2]))
         self.root.ids.label.text += '%s\n' % message[2]

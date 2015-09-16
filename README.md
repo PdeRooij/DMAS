@@ -14,6 +14,9 @@ Repository of our project for the course Design of Multi-Agent Systems. This sim
 
 http://kivy.org/docs/installation/installation-linux.html
 
+## Dependencies
+http://kivy.org/docs/installation/installation-linux.html#installation-in-a-virtual-environment
+
 # Git usage
 ## First time setup
 1. git clone https://github.com/PdeRooij/DMAS.git

@@ -17,10 +17,8 @@ and runs it in cycles while handling the transitions between those.
 ############################
 
 
+# Class that does all the agent stuff when simulation is running (not used yet)
 class Simulation():
-    # Class containing the entire simulation.
-    # Everything is run by a subsequent call by this class.
-
     # Initialize the simulation
     def __init__(self):
         print("\nInit master...")
@@ -52,8 +50,8 @@ class Simulation():
         # Teehee! I got you good! Not doin' nothin'... or do I?
         pass
 
+# osc for publishing/receiving messages to/from the listener (gui or non-gui)
 class osc_message():
-    # osc for publishing messages for listener (gui or non-gui)
     def __init__(self):
         osc.init()
         oscid = osc.listen(ipAddr='0.0.0.0', port=3000)
@@ -67,8 +65,6 @@ class osc_message():
 
         # Init actual model
         #self.sim = Simulation()
-        #sim.run()
-        #sim.quit()
 
         self.model = Model()
         self.cycle = 0
@@ -93,6 +89,7 @@ class osc_message():
 
             sleep(0.5)
 
+    # Change simulation status based on message from listener
     def startquit(self, can_start, *args):
         if can_start[2] == True:
             print("\n    Simulation started    ")
@@ -101,14 +98,16 @@ class osc_message():
         self.can_start = can_start[2]
         self.cycle = 0
 
+    # Informs the listener whether the simulation is running or not
     def simulation_status_send(self, *args):
         print("Send simulation status")
         osc.sendMsg('/simu-status', [self.can_start, ], port=3002)
 
+    # Send text message "Hello world" to listener
     def send_hello(self, *args):
         print("sending hello...")
         osc.sendMsg('/receive_hello', ["Hello world", ], port=3002)
 
-# Initialize a simulation instance and call its run function
+# Initialize a server instance for agent simulation
 if __name__ == '__main__':
     osc_message()
