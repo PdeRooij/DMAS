@@ -10,7 +10,13 @@ class Parameters():
         print("Init Parameters...")
         self.param = {'n_drivers': 2,
                       'grid_size': [3, 3],
-                      'max_cycles': 1000
+                      'max_cycles': 1000,
+                      'reward': {
+                          'clear': 0,
+                          'crash': -1000,
+                          'wait': -10,
+                          'destination': 200
+                      }
                       }
 
     # Returns setting of specified parameter

@@ -2,9 +2,9 @@
 
 __author__ = 'tom, stef, pieter'
 
-import model.osc as osc
+import service.osc as osc
 from time import sleep
-from model.model import Model
+from service.model import Model
 
 class ClientServerApp():
     def __init__(self):

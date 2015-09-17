@@ -1,6 +1,6 @@
 __author__ = 'tom, stef, pieter'
 
-from Simulation.directions import Directions
+from directions import Directions
 
 # A situation generated as two or more drivers encounter each other.
 

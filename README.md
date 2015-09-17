@@ -3,8 +3,7 @@ Repository of our project for the course Design of Multi-Agent Systems. This sim
 
 # START
 1. python service/main.py  (This is the server running the simulation)
-2. python non-gui.py       (Script version to call/listen agent simulation)
-2. python gui.py           (GUI version to call/listen agent simulation, *needs Kivy*)
+2. python main.py           (GUI version to call/listen agent simulation, *needs Kivy*)
 
 # Kivy install Ubuntu
 1. sudo add-apt-repository ppa:kivy-team/kivy-daily  # Latest Kivy
@@ -32,3 +31,7 @@ http://kivy.org/docs/installation/installation-linux.html#installation-in-a-virt
 ## Other git commands
 * git merge *branch*  # To merge branch
 * git checkout *branch*  # Switch to different branch if every change is checkout or undone
+
+## Pycharm
+1. If you use Pycharm, everything about git mentioned above can be done easily using the VCS menu.
+2. At least, that is my opinion. :)
