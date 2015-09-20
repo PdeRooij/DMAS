@@ -1,5 +1,6 @@
 __author__ = 'tom, stef, pieter'
 
+from directions import Directions
 from Queue import Queue
 
 # Class representing a crossing in the model.
@@ -10,10 +11,12 @@ class Crossing:
 
     # Generate empty crossing
     def __init__(self):
-        self.north = Queue()
-        self.east = Queue()
-        self.south = Queue()
-        self.west = Queue()
+        self.dr = Directions()  # Store a directions instance
+
+        # Make dictionary of roads from every direction
+        self.roads = {}.fromkeys(self.dr.directions, Queue())
+        # Also a hold for if a driver decided to wait
+        self.hold = {}.fromkeys(self.dr.directions)
 
     # Take next in queues, generate traffic situation
     def resolve(self):

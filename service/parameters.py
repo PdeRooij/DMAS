@@ -12,10 +12,10 @@ class Parameters():
                       'grid_size': [3, 3],
                       'max_cycles': 1000,
                       'reward': {
-                          'clear': 0,
+                          'clear': -10,
                           'crash': -1000,
-                          'wait': -10,
-                          'destination': 200
+                          'wait': -25,
+                          'destination': 400
                       }
                       }
 

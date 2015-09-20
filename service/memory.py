@@ -35,15 +35,15 @@ class Memory:
 # Represents one specific memory
 class Chunk:
     # Something here to store relevant information of an event
-    def __init__(self, drivers, act, r):
-        self.drivers = drivers  # Situation characterized by drivers from left, ahead or right
-        self.action = act  # Chosen action
-        self.reward = r  # Reward received after taking action in this situation
+    def __init__(self, traffic, act, r):
+        self.traffic = traffic  # Situation characterized by drivers from left, ahead or right
+        self.action = act       # Chosen action
+        self.reward = r         # Reward received after taking action in this situation
 
     # A chunk equals another if the situation is similar
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
-                and self.drivers == other.drivers)
+                and self.traffic == other.traffic)
 
     # Specify when memories are not similar, which obviously is te inverse of the above
     def __ne__(self, other):

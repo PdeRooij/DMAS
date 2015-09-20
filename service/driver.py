@@ -18,12 +18,20 @@ class Driver:
         self.status = 'spawning'    # Status (driving, queued, etc.)
 
     # Decide what to do in given situation
-    def decide(self, situation):
+    def decide(self, traffic):
         rand = Random()
-        matches = self.mem.match(situation)     # List of matching situations in memory
+        matches = self.mem.match(traffic)     # List of matching situations in memory
         if matches:
             # At least one matching situation is found. Take best action from experience.
-            return 'go'
+            utils = self.compute_utility(matches)
+            best = 'go'
+            high = -1000000
+            for act, util in utils.iteritems():
+                if util > high:
+                    # TODO There should still be some explorative behaviour if the difference is small
+                    best = act
+                    high = util
+            return best
         else:
             # No matching situations, randomly select action
             act = rand.randint(0, 1)

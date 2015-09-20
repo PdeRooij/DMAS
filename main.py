@@ -1,5 +1,7 @@
+#!/usr/bin/python
 __author__ = 'tom, stef, pieter'
 
+import sys
 from kivy.app import App
 from kivy.lib import osc
 from kivy.clock import Clock
@@ -90,4 +92,15 @@ class GUIApp(App):
         self.root.ids.label.text += '%s\n' % message[2]
 
 if __name__ == '__main__':
+    # This is where the program is called from
+    if len(sys.argv) > 1:
+        # More arguments given than just the filename
+        print 'Oooh, you discovered the super secret corners of our program!'
+        print "Let's see what you shady things you expect from me..."
+        # Handle optional command line arguments
+        for argument in sys.argv[1:]:
+            # Of course, we do not intend to comply. :)
+            print "Nope, don't know what to do with argument", argument
+
+    # In the end, just run the program.
     GUIApp().run()
