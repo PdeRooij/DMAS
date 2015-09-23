@@ -1,10 +1,10 @@
 #!usr/bin/python
 
-__author__ = 'tom, stef, pieter'
-
 import osc  # from kivy.lib import osc
 from time import sleep
 from model import Model
+
+__author__ = 'tom, stef, pieter'
 
 """
 This class contains the main loop of the simulation.
@@ -18,7 +18,7 @@ and runs it in cycles while handling the transitions between those.
 
 
 # Class that does all the agent stuff when simulation is running (not used yet)
-class Simulation():
+class Simulation:
     # Initialize the simulation
     def __init__(self):
         print("\nInit master...")
@@ -33,9 +33,9 @@ class Simulation():
         # For as long as the number of cycles specified in the parameters
         max_cycles = self.model.parameters.get('max_cycles')
         print("Max cycles: {}".format(max_cycles))
-        #while self.cycle < max_cycles:
+        # while self.cycle < max_cycles:
         self.model.update()
-        self.gui.update()
+        # self.gui.update()
         self.cycle += 1
 
         # Here something to analyze emergence?
@@ -51,7 +51,7 @@ class Simulation():
         pass
 
 # osc for publishing/receiving messages to/from the listener (gui or non-gui)
-class osc_message():
+class osc_message:
     def __init__(self):
         osc.init()
         oscid = osc.listen(ipAddr='0.0.0.0', port=3000)

@@ -1,6 +1,6 @@
-__author__ = 'tom, stef, pieter'
-
 from Queue import Queue
+
+__author__ = 'tom, stef, pieter'
 
 """
 Everything related to memory is included in this file.
@@ -14,6 +14,10 @@ class Memory:
     def __init__(self, length=10):
         self.mem = Queue()
         self.length = length
+
+    # Makes a new chunk and stores it in memory
+    def store(self, traffic, act, r):
+        self.mem.put(Chunk(traffic, act, r))
 
     # Compare current condition (chunk?) to similar events
     def match(self, chunk):

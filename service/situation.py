@@ -1,6 +1,6 @@
-__author__ = 'tom, stef, pieter'
-
 from directions import Directions
+
+__author__ = 'tom, stef, pieter'
 
 # A situation generated as two or more drivers encounter each other.
 
@@ -14,7 +14,7 @@ class Situation:
 
     # Distribute current situation to involved drivers from their viewpoint
     def distribute(self):
-        # Initialize list of chosen actions of drivers, tuple (direction, action)
+        # Initialize list of chosen actions of drivers, tuple (direction, driver, action)
         actions = []
         # Consider every direction
         for direction, driver in self.traffic.iteritems():
@@ -39,3 +39,10 @@ class Situation:
                 actions.append((direction, driver.decide(view)))
 
         return actions
+
+    # Computes outcome and rewards for involved drivers
+    def compute_outcome(self, actions, rewards):
+        # Consider all decisions
+        for direction, action in actions:
+            if action == 'wait':
+                self.traffic[direction].remember(rewards['wait'])

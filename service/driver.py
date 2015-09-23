@@ -1,7 +1,7 @@
-__author__ = 'tom, stef, pieter'
-
 from memory import Memory
 from random import Random
+
+__author__ = 'tom, stef, pieter'
 
 # Class simulating a driver.
 # Each driver has a (unique) ID, a history (memory)
@@ -13,12 +13,20 @@ class Driver:
     def __init__(self, name='unknown'):
         self.id = name
         self.mem = Memory()
+        # Working memory
+        self.view = None        # Last view of situation
+        self.act = None         # Last chosen action
         self.spawn = [0, 0]     # Where the driver spawns
         self.goal = [0, 0]      # Where the driver is headed to
+        self.heading = [0, 1, 0]    # Heading at the moment (always ahead as of yet)
         self.status = 'spawning'    # Status (driving, queued, etc.)
 
     # Decide what to do in given situation
     def decide(self, traffic):
+        # A check because the remember approach might be prone to error
+        if self.view:
+            print 'WARNING!! Apparently took an action without getting a reward!'
+
         rand = Random()
         matches = self.mem.match(traffic)     # List of matching situations in memory
         if matches:
@@ -40,6 +48,13 @@ class Driver:
             else:
                 return 'go'
 
+    # Combines current memory with given reward
+    def remember(self, reward):
+        # Again a check because this method might be prone to error
+        if not (self.view and self.act):
+            print 'WARNING!! This driver forgot what to remember!'
+        self.mem.store(self.view, self.act, reward)
+
     # Compute utilities of actions based on similar past situations
     def compute_utility(self, memories):
         util = {'go': 0, 'wait': 0}     # Dictionary with utilities of each action, start at 0
@@ -49,3 +64,38 @@ class Driver:
             util[m.action] += m.reward
         # Return the utilities of each action
         return util
+
+    # Initiates a respawn cycle. Takes dimensions of grid (x,y) and returns spawn point.
+    def respawn(self, x, y):
+        # Signify spawning at an edge of the grid
+        self.status = 'spawning'
+        rand = Random()
+
+        # 50/50 chance of differing in x or y
+        if rand.randint(0, 1):
+            # Differing in y
+            spawn_y = goal_y = rand.randint(0, y)
+            # Spawn left or right
+            if rand.randint(0, 1):
+                spawn_x = 0
+                goal_x = x
+            else:
+                spawn_x = x
+                goal_x = 0
+        else:
+            # Differing in x
+            spawn_x = goal_x = rand.randint(0, x)
+            # Spawn top or bottom
+            if rand.randint(0, 1):
+                spawn_y = 0
+                goal_y = y
+            else:
+                spawn_y = y
+                goal_y = 0
+
+        # Compose new spawn point
+        self.spawn = [spawn_x, spawn_y]
+        # Also compute the new goal destination, currently opposite side.
+        self.goal = [goal_x, goal_y]
+
+        return self.spawn
