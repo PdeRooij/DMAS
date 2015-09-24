@@ -36,8 +36,9 @@ class Driver:
             self.act = 'go'
             high = -1000000
             for act, util in utils.iteritems():
-                if util > high:
-                    # TODO There should still be some explorative behaviour if the difference is small
+                if util > high and util - high > rand.randint(1, 5):
+                    # NOISE VALUES STILL NEED TO BE DETERMINED
+                    # Check utility is the highest and the difference is large enough, random noise added
                     self.act = act
                     high = util
         else:
