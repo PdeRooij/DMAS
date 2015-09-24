@@ -41,5 +41,13 @@ class Crossing:
             return Situation(traffic)
 
     # Move drivers to next location in crossing
-    def move_drivers(self):
-        pass
+    def move_drivers(self, traffic, collision=False):
+        # Check if there was a crash, if so, collision will contain involved drivers
+        if collision:
+            # There is a collision, put involved drivers in crash location
+            self.next['crash'] = collision
+        # Move drivers to the opposite side
+        for direction, driver in traffic.iteritems():
+            if driver:
+                # There is a driver, move him to the next in the opposite direction
+                self.next[self.dr[self.dr[direction]-2]] = driver

@@ -59,10 +59,14 @@ class Situation:
                         collision = True
                         # Give corresponding reward and remove from actions list
                         self.traffic[dr_left].remember(rewards['crash'])
+                        actions[dr_left] = None
                 if collision:
                     # There was a collision, give this driver corresponding reward
                     self.traffic[direction].remember(rewards['crash'])
                 else:
                     # No crash, good to go!
                     self.traffic[direction].remember(rewards['clear'])
+
+            # Driver's decision is computed, remove from action list
+            action = None
 
