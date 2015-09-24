@@ -27,26 +27,29 @@ class Driver:
         if self.view:
             print 'WARNING!! Apparently took an action without getting a reward!'
 
+        self.view = traffic     # Store view in working memory
         rand = Random()
         matches = self.mem.match(traffic)     # List of matching situations in memory
         if matches:
             # At least one matching situation is found. Take best action from experience.
             utils = self.compute_utility(matches)
-            best = 'go'
+            self.act = 'go'
             high = -1000000
             for act, util in utils.iteritems():
                 if util > high:
                     # TODO There should still be some explorative behaviour if the difference is small
-                    best = act
+                    self.act = act
                     high = util
-            return best
         else:
             # No matching situations, randomly select action
             act = rand.randint(0, 1)
             if act == 0:
-                return 'wait'
+                self.act = 'wait'   # Also store in WM
             else:
-                return 'go'
+                self.act = 'go'
+
+        # Finally return the decision
+        return self.act
 
     # Combines current memory with given reward
     def remember(self, reward):
@@ -54,6 +57,7 @@ class Driver:
         if not (self.view and self.act):
             print 'WARNING!! This driver forgot what to remember!'
         self.mem.store(self.view, self.act, reward)
+        self.view = self.act = None     # Clear WM
 
     # Compute utilities of actions based on similar past situations
     def compute_utility(self, memories):

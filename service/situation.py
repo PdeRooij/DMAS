@@ -14,7 +14,7 @@ class Situation:
 
     # Distribute current situation to involved drivers from their viewpoint
     def distribute(self):
-        # Initialize list of chosen actions of drivers, tuple (direction, driver, action)
+        # Initialize list of chosen actions of drivers, tuple (direction, action)
         actions = []
         # Consider every direction
         for direction, driver in self.traffic.iteritems():
@@ -46,3 +46,23 @@ class Situation:
         for direction, action in actions:
             if action == 'wait':
                 self.traffic[direction].remember(rewards['wait'])
+            elif action == 'go':
+                # Check if there is a driver from the right or the left
+                dr_left = self.directions[direction]+1
+                dr_right = self.directions[direction]-1
+                collision = False   # Flag whether there was a collision
+                # TODO this is not yet safe for drivers from all directions!!
+                if self.traffic[dr_left]:
+                    # There is a driver to the left
+                    if actions[dr_left] == 'go':
+                        # This driver chose to go as well, there is a collision
+                        collision = True
+                        # Give corresponding reward and remove from actions list
+                        self.traffic[dr_left].remember(rewards['crash'])
+                if collision:
+                    # There was a collision, give this driver corresponding reward
+                    self.traffic[direction].remember(rewards['crash'])
+                else:
+                    # No crash, good to go!
+                    self.traffic[direction].remember(rewards['clear'])
+

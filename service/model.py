@@ -45,3 +45,4 @@ class Model:
             # Resolve situations, make drivers decide and compute outcome
             sitrep = crossing.resolve()
             actions = sitrep.distribute()
+            sitrep.compute_outcome(actions, self.parameters['reward'])

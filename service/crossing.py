@@ -39,3 +39,7 @@ class Crossing:
         # Initialize a situation if there is traffic and give that back
         if gen:
             return Situation(traffic)
+
+    # Move drivers to next location in crossing
+    def move_drivers(self):
+        pass
