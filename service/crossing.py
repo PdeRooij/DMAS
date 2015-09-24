@@ -11,7 +11,8 @@ __author__ = 'tom, stef, pieter'
 class Crossing:
 
     # Generate empty crossing
-    def __init__(self):
+    def __init__(self, location):
+        self.loc = location     # [x, y]
         self.dr = Directions()  # Store a directions instance
 
         # Make dictionary of roads from every direction
@@ -51,3 +52,36 @@ class Crossing:
             if driver:
                 # There is a driver, move him to the next in the opposite direction
                 self.next[self.dr[self.dr[direction]-2]] = driver
+
+    # Returns the drivers that have to be moved elsewhere
+    def translate_drivers(self):
+        # Put all drivers that have to be moved in to_move
+        to_move = self.next
+        # Make a list of all transitions
+        pieter_4_life = []
+        for direction, driver in to_move.iteritems():
+            if direction == 'crash':
+                # Forget about this, because it is handled by the model
+                pass
+                for d in driver:
+                    # TODO move this in a higher hierarchy
+                    d.respawn()
+            else:
+                # Move this driver to next crossing
+                next_cr = self.loc
+                if direction == 'North':
+                    # Increases y by 1
+                    next_cr[1] += 1
+                elif direction == 'East':
+                    # Increase x by 1
+                    next_cr[0] += 1
+                elif direction == 'South':
+                    # Decrease y by 1
+                    next_cr[1] -= 1
+                elif direction == 'West':
+                    # Decrease x by 1
+                    next_cr[0] -= 1
+                next_dr = self.dr[self.dr[direction]-2]     # Compute opposite direction (queue it will move into)
+                pieter_4_life.append((driver, next_cr, next_dr))
+
+        return pieter_4_life

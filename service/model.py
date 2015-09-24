@@ -32,7 +32,7 @@ class Model:
             cr_row = []
             col = dim[1]
             while col > 0:
-                cr_row.append(Crossing())
+                cr_row.append(Crossing([dim[0]-row, dim[1]-col]))
                 col -= 1
             self.crossings.append(cr_row)
             row -= 1
@@ -43,6 +43,13 @@ class Model:
         # Iterate over every crossing
         for crossing in [crossing for row in self.crossings for crossing in row]:
             # Resolve situations, make drivers decide and compute outcome
+            #TODO ensure right order in this loop!
             sitrep = crossing.resolve()
             actions = sitrep.distribute()
-            sitrep.compute_outcome(actions, self.parameters['reward'])
+            sitrep.compute_outcome(actions, self.parameters.get('reward'))
+            # TODO make them collisions collide collisions yolo
+            crossing.move_drivers(sitrep, False)
+            translations = crossing.translate_drivers()
+            # Actually move drivers to the correct destinations
+            for driver, n_cr, n_dr in translations:
+                pass
