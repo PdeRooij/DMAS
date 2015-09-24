@@ -3,24 +3,10 @@
 BoxLayout:
     orientation: 'horizontal'
 
-#    # For simulating agents
-#    GridLayout:
-#        # Green background
-#        size_hint_x: 0.8
-#        canvas.before:
-#            Color:
-#                rgba: .6, 1, .6, 1
-#            Rectangle:
-#                pos: self.pos
-#                size: self.size
-#
-#        cols: 2
-#        rows: 2
-
-    # Printing hello world
-    ScrollView:
-        size_hint_x: 0.8
+    # Agent grid simulation
+    GridLayout:
         # Green background
+        size_hint_x: 0.8
         canvas.before:
             Color:
                 rgba: .6, 1, .6, 1
@@ -28,30 +14,141 @@ BoxLayout:
                 pos: self.pos
                 size: self.size
 
-        Label:
-            id: label
-            color: 0, 0, 0, 1
-            size_hint_y: None
-            height: self.texture_size[1]
-            text_size: self.size[0], None
+        cols: int(app.grid[0])
+        rows: int(app.grid[1])
 
-
+    # Menu
     BoxLayout:
         orientation: 'vertical'
-        size_hint_x: 0.2
+        size_hint_x: 0.25
+        padding: '6dp', '6dp'
+        spacing: '6dp'
 
+        # Start / Pause
         Button:
-            size_hint_y: 0.2
-            text: 'Start' if app.start_simu == True else 'Stop'
+            size_hint_y: 0.15
+            text: 'Start' if app.start_simu == True else 'Pause'
+            font_size: '18sp'
             disabled: not app.server_running
+            background_color: [0, 1, 0, 1] if app.start_simu == True else [1, 1, 0, 1]
             on_release: app.start_simulation()
 
+        # Stop
         Button:
-            size_hint_y: 0.2
-            text: 'clear'
-            disabled: not app.server_running
-            on_press: label.text = ''
+            size_hint_y: 0.15
+            text: 'Stop'
+            font_size: '18sp'
+            disabled: app.cycle == 0
+            background_color: [1, 0, 0, 1]
+            on_press: app.stop_simulation()
 
-        Label:
-            size_hint_y: 0.6
-            text: "Hello world"
+        # Cycle settings
+        BoxLayout:
+            size_hint_y: 0.08
+
+            Label:
+                size_hint_x: 1.25
+                text: "Cycle: {}".format(app.cycle)
+
+            TextInput:
+                size_hint_x: 0.75
+                text: str(int(app.max_cycle))
+                multiline: False
+                disabled: True if app.cycle != 0 else False
+
+        Slider:
+            size_hint_y: 0.08
+            disabled: True if app.cycle != 0 else False
+            min: 20
+            max: 1000
+            step: 20
+            value: app.max_cycle
+            on_value: app.max_cycle = self.value
+
+        # Agent settings
+        BoxLayout:
+            size_hint_y: 0.08
+            orientation: 'horizontal'
+
+            Label:
+                size_hint_x: 1.25
+                text: "Agents:"
+
+            TextInput:
+                size_hint_x: 0.75
+                text: str(int(app.agents_num))
+                multiline: False
+                disabled: True if app.cycle != 0 else False
+
+        Slider:
+            size_hint_y: 0.08
+            disabled: True if app.cycle != 0 else False
+            min: 2
+            max: 20
+            step: 1
+            value: app.agents_num
+            on_value: app.agents_num = self.value
+
+        # Grid settings
+        BoxLayout:
+            size_hint_y: 0.08
+            orientation: 'horizontal'
+
+            Label:
+                size_hint_x: 1.25
+                text: "Grid:"
+
+            TextInput:
+                size_hint_x: 0.30
+                text: str(int(app.grid[0]))
+                multiline: False
+                disabled: True if app.cycle != 0 else False
+
+            Label:
+                size_hint_x: 0.15
+                text: "x"
+
+            TextInput:
+                size_hint_x: 0.30
+                text: str(int(app.grid[1]))
+                multiline: False
+                disabled: True if app.cycle != 0 else False
+
+        Slider:
+            size_hint_y: 0.08
+            disabled: True if app.cycle != 0 else False
+            min: 2
+            max: 10
+            step: 1
+            value: app.grid[0] + app.grid[1]
+            on_value: app.grid = [self.value / 2 + ((self.value/2)-int(self.value/2)), self.value / 2 - ((self.value/2)-int(self.value/2))]
+
+        # Statistics
+#        Label:
+#            size_hint_y: 0.60
+#            text: "Statistics"
+#            color: 0, 0, 0, 1
+#            canvas.before:
+#                Color:
+#                    rgba: 1, 1, 1, 1
+#                Rectangle:
+#                    pos: self.pos
+#                    size: self.size
+
+        # Print simulation status
+        ScrollView:
+            size_hint_y: 0.60
+            # Green background
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                id: label
+                color: 0, 0, 0, 1
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.size[0], None
