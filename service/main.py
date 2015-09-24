@@ -29,30 +29,13 @@ class Simulation:
         self.model = Model()
         self.agent_action = []
 
-        # Initiate zeroth cycle
-        self.cycle = 0
-
     # Run the simulation
     def run(self):
-        # For as long as the number of cycles specified in the parameters
-        max_cycles = self.model.parameters.get('max_cycles')
-        print("Max cycles: {}".format(max_cycles))
-        # while self.cycle < max_cycles:
-        self.model.update()
-        # self.gui.update()
-        self.cycle += 1
+        print("HERE I HAVE TO DO STUFF 0.o")
 
-        # Here something to analyze emergence?
-        # It could be a separate method
-        analysis = True
-        while analysis:
-            # Make false to end analysis
-            analysis = False
-
-    # Perhaps something to leave the user a neat and tidy system
-    def quit(self):
-        # Teehee! I got you good! Not doin' nothin'... or do I?
-        pass
+        #     Set statisticss
+        # Agent stats [grid, north, east, south, west]
+        self.grid_agent_stats = [[0, 0, 1, 1, 0], [1, 0, 1, 0, 0]]
 
 # osc for publishing/receiving messages to/from the listener (gui or non-gui)
 class osc_message:
@@ -68,7 +51,7 @@ class osc_message:
         osc.bind(oscid, self.simulation_status_send, '/simu-status_ask')
 
         # Init actual model
-        #self.sim = Simulation()
+        self.sim = Simulation()
 
         self.model = Model()
         self.cycle = 0
@@ -87,7 +70,11 @@ class osc_message:
                 # Only run simulation when started and max cycles not reached
                 #print("Start: {}, Max Cycles: {}".format(self.can_start, self.max_cycles))
                 if self.can_start == True and self.cycle < self.max_cycles:
-                    #self.sim.run()
+                    # Agent stuff
+                    self.sim.run()
+
+                    # Statistics stuff
+                    self.statistics()
 
                     # Hello world test
                     self.cycle += 1
@@ -99,6 +86,9 @@ class osc_message:
             except (KeyboardInterrupt, SystemExit):
                 self.send_server_stop()
                 exit()
+
+    def statistics(self):
+        print(self.sim.grid_agent_stats)
 
     # Change simulation status based on message from listener
     def startquit(self, can_start, *args):
