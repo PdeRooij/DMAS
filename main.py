@@ -7,7 +7,6 @@ from kivy.lib import osc
 from kivy.clock import Clock
 from kivy.properties import BooleanProperty, NumericProperty, ReferenceListProperty, ListProperty
 from kivy.uix.label import Label
-from kivy.clock import Clock
 from kivy.utils import platform
 platform = platform()
 
@@ -36,12 +35,12 @@ class GUIApp(App):
     columns = NumericProperty(2)
     grid = ReferenceListProperty(rows, columns)
 
-    # def __init__(self, **kwargs):
-    #     super(GUIApp, self).__init__(**kwargs)
-    #
-    #     # Grid changes
-    #     self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
-    #     self.bind(grid=self._size_handler_trigger)
+    def __init__(self, **kwargs):
+        super(GUIApp, self).__init__(**kwargs)
+
+        # Grid changes
+        self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
+        self.bind(grid=self._size_handler_trigger)
 
 
     # Initialize grid and such
@@ -70,8 +69,8 @@ class GUIApp(App):
         osc.sendMsg('/simu-status_ask', [], port=3000)
 
         # Grid changes
-        self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
-        self.bind(grid=self._size_handler_trigger)
+        # self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
+        # self.bind(grid=self._size_handler_trigger)
 
         if not self.server_running:
             print("Simulation server not running")
@@ -139,6 +138,21 @@ class GUIApp(App):
 
     def _size_handler(self, *largs):
         print("Grid change")
+        # Get number of crossings in grid
+        crossing_obj = App.get_running_app().root.ids.gridy.children
+        crossing_len = len(crossing_obj)
+        grid_size = self.grid[0] * self.grid[1]
+
+        # Add crossings if grid is not full yet
+        while crossing_len < grid_size:
+            App.get_running_app().root.ids.gridy.add_widget(Crossing())
+            crossing_len += 1
+
+        # Remove crossings one for one while more crossings than grid size
+        while crossing_len > grid_size:
+            App.get_running_app().root.ids.gridy.remove_widget(crossing_obj[-1])
+            crossing_len -= 1
+
 
 if __name__ == '__main__':
     # This is the GUI for the agent simulation
