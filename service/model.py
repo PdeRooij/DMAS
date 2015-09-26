@@ -17,13 +17,6 @@ class Model:
         print("Init Model...")
         self.parameters = Parameters()
 
-        # Spawn drivers
-        self.drivers = []
-        n = self.parameters.get('n_drivers')
-        while n > 0:
-            self.drivers.append(Driver('driver' + str(n)))
-            n -= 1
-
         # Spawn crossings
         dim = self.parameters.get('grid_size')
         self.crossings = []     # Crossings in grid orientation
@@ -37,19 +30,46 @@ class Model:
             self.crossings.append(cr_row)
             row -= 1
 
+        # Spawn drivers
+        self.drivers = []
+        n = self.parameters.get('n_drivers')
+        while n > 0:
+            driver = Driver('driver' + str(n))
+            self.drivers.append(driver)
+            # Put at a grid edge
+            new_loc = driver.respawn(dim[0], dim[1])
+            self.crossings[new_loc[0]][new_loc[1]].put_spawn(driver, dim[0]-1, dim[1]-1)
+            n -= 1
+
     # A procedure to update the model to the next cycle
     def update(self):
 
         # Iterate over every crossing
         for crossing in [crossing for row in self.crossings for crossing in row]:
             # Resolve situations, make drivers decide and compute outcome
-            #TODO ensure right order in this loop!
+            # TODO ensure right order in this loop!
             sitrep = crossing.resolve()
             actions = sitrep.distribute()
-            sitrep.compute_outcome(actions, self.parameters.get('reward'))
+            crashed = sitrep.compute_outcome(actions, self.parameters.get('reward'))
             # TODO make them collisions collide collisions yolo
-            crossing.move_drivers(sitrep, False)
+            crossing.move_drivers(sitrep, crashed)
+            # Respawn crashed drivers
+            # NOTE: do this after moving, because they still have to go to the middle, generating a transition
+            dim = self.parameters.get('grid_size')
+            for driver in crashed:
+                new_loc = driver.respawn(dim[0], dim[1])
+                self.crossings[new_loc[0]][new_loc[1]].put_spawn(driver, dim[0]-1, dim[1]-1)
+            # Move remaining drivers
             translations = crossing.translate_drivers()
             # Actually move drivers to the correct destinations
             for driver, n_cr, n_dr in translations:
-                pass
+                # Check whether a driver wants to move outside the grid
+                if n_cr[0] < 0 or n_cr[0] > dim[0]-1 or n_cr[1] < 0 or n_cr[1] > dim[1]-1:
+                    # That means that the driver has reached its destination
+                    driver.status = 'finished'
+                    # Also make this driver respawn
+                    new_loc = driver.respawn(dim[0], dim[1])
+                    self.crossings[new_loc[0]][new_loc[1]].put_spawn(driver, dim[0]-1, dim[1]-1)
+                else:
+                    # Just move to next crossing
+                    self.crossings[n_cr[0]][n_cr[1]].enqueue(driver, n_dr)

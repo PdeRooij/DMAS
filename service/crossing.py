@@ -1,4 +1,5 @@
 from Queue import Queue
+from random import Random
 from directions import Directions
 from situation import Situation
 
@@ -55,17 +56,12 @@ class Crossing:
 
     # Returns the drivers that have to be moved elsewhere
     def translate_drivers(self):
-        # Put all drivers that have to be moved in to_move
-        to_move = self.next
         # Make a list of all transitions
         pieter_4_life = []
-        for direction, driver in to_move.iteritems():
+        for direction, driver in self.next.iteritems():
             if direction == 'crash':
                 # Forget about this, because it is handled by the model
                 pass
-                for d in driver:
-                    # TODO move this in a higher hierarchy
-                    d.respawn()
             else:
                 # Move this driver to next crossing
                 next_cr = self.loc
@@ -85,3 +81,33 @@ class Crossing:
                 pieter_4_life.append((driver, next_cr, next_dr))
 
         return pieter_4_life
+
+    # Puts a driver coming from another crossing in the right queue
+    def enqueue(self, driver, direction):
+        self.roads[direction].put(driver)
+        driver.status = 'queued'
+
+    # Spawns a driver at the edge of the grid.
+    def put_spawn(self, driver, edge_x, edge_y):
+        edge = []   # List of directions that are on the edge
+
+        # Calculate which direction is the edge
+        if not self.loc[0]:
+            # X is zero, so crossing is at the left edge of the grid
+            edge.append('West')
+        if not self.loc[1]:
+            # Y is zero, so crossing is at the top edge of the grid
+            edge.append('North')
+        if self.loc[0] == edge_x:
+            # X equals maximal x, so crossing is at the right edge of the grid
+            edge.append('East')
+        if self.loc[1] == edge_y:
+            # Y equals maximal y, so crossing is at the bottom edge of the grid
+            edge.append('South')
+
+        # Enqueue the driver at (one of) the edge(s)
+        if len(edge) > 1 and Random().randint(0, 1):
+            # If the crossing is at a corner, randomly assign to one of the edges
+            self.enqueue(driver, edge[1])
+        else:
+            self.enqueue(driver, edge[0])

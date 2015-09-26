@@ -46,8 +46,10 @@ class Driver:
             act = rand.randint(0, 1)
             if act == 0:
                 self.act = 'wait'   # Also store in WM
+                self.status = 'waiting'
             else:
                 self.act = 'go'
+                self.status = 'driving'
 
         # Finally return the decision
         return self.act
@@ -61,7 +63,8 @@ class Driver:
         self.view = self.act = None     # Clear WM
 
     # Compute utilities of actions based on similar past situations
-    def compute_utility(self, memories):
+    @staticmethod
+    def compute_utility(memories):
         util = {'go': 0, 'wait': 0}     # Dictionary with utilities of each action, start at 0
         # Consider every memory
         for m in memories:
@@ -71,6 +74,7 @@ class Driver:
         return util
 
     # Initiates a respawn cycle. Takes dimensions of grid (x,y) and returns spawn point.
+    # TODO uncomment if we want to spawn not only at bottom and right
     def respawn(self, x, y):
         # Signify spawning at an edge of the grid
         self.status = 'spawning'
@@ -79,28 +83,28 @@ class Driver:
         # 50/50 chance of differing in x or y
         if rand.randint(0, 1):
             # Differing in y
-            spawn_y = goal_y = rand.randint(0, y)
+            spawn_y = goal_y = rand.randint(0, y-1)
             # Spawn left or right
-            if rand.randint(0, 1):
-                spawn_x = 0
-                goal_x = x
-            else:
-                spawn_x = x
-                goal_x = 0
+            # if rand.randint(0, 1):
+            #     spawn_x = 0
+            #     goal_x = x-1
+            # else:
+            spawn_x = x-1
+            goal_x = 0
         else:
             # Differing in x
-            spawn_x = goal_x = rand.randint(0, x)
+            spawn_x = goal_x = rand.randint(0, x-1)
             # Spawn top or bottom
-            if rand.randint(0, 1):
-                spawn_y = 0
-                goal_y = y
-            else:
-                spawn_y = y
-                goal_y = 0
+            # if rand.randint(0, 1):
+            #     spawn_y = 0
+            #     goal_y = y-1
+            # else:
+            spawn_y = y-1
+            goal_y = 0
 
         # Compose new spawn point
         self.spawn = [spawn_x, spawn_y]
-        # Also compute the new goal destination, currently opposite side.
+        # Also compose the new goal destination, currently opposite side.
         self.goal = [goal_x, goal_y]
 
         return self.spawn

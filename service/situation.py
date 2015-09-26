@@ -24,10 +24,10 @@ class Situation:
                 # There is a driver from this direction, generate her view
                 view = [None, None, None]
 
-                ## Consider drivers from every other direction
+                # Consider drivers from every other direction
                 # First get 'other' directions
                 other_dr = list(self.directions[self.directions[direction]:len(self.directions)]) +\
-                        list(self.directions[0:self.directions[direction]])
+                    list(self.directions[0:self.directions[direction]])
                 # NOTE: Composition is important here! Slicing required for [left, ahead, right]
                 # Loop over those directions, idx corresponds with view
                 for idx, dr in enumerate(other_dr):
@@ -40,33 +40,43 @@ class Situation:
 
         return actions
 
-    # Computes outcome and rewards for involved drivers
+    # Computes outcome and rewards for involved drivers, returns a list of crashed drivers
     def compute_outcome(self, actions, rewards):
+        dummies = []    # List of crashed drivers
         # Consider all decisions
         for direction, action in actions:
+            driver = self.traffic[direction]    # Get driver from that direction
             if action == 'wait':
-                self.traffic[direction].remember(rewards['wait'])
+                driver.remember(rewards['wait'])
             elif action == 'go':
                 # Check if there is a driver from the right or the left
                 dr_left = self.directions[direction]+1
                 dr_right = self.directions[direction]-1
                 collision = False   # Flag whether there was a collision
                 # TODO this is not yet safe for drivers from all directions!!
-                if self.traffic[dr_left]:
-                    # There is a driver to the left
-                    if actions[dr_left] == 'go':
-                        # This driver chose to go as well, there is a collision
-                        collision = True
-                        # Give corresponding reward and remove from actions list
-                        self.traffic[dr_left].remember(rewards['crash'])
-                        actions[dr_left] = None
-                if collision:
-                    # There was a collision, give this driver corresponding reward
-                    self.traffic[direction].remember(rewards['crash'])
-                else:
-                    # No crash, good to go!
-                    self.traffic[direction].remember(rewards['clear'])
+                for dr, other in zip([dr_left, dr_right], [self.traffic[dr_left], self.traffic[dr_right]]):
+                    if other:
+                        # There is a driver to the left or right
+                        if actions[dr] == 'go':
+                            # This driver chose to go as well, there is a collision
+                            collision = True
+                            # Give corresponding reward and remove from actions list
+                            other.remember(rewards['crash'])
+                            other.status = 'crashed'
+                            dummies.append(other)
+                            actions[dr] = None
+                    if collision:
+                        # There was a collision, give this driver corresponding reward
+                        driver.remember(rewards['crash'])
+                        driver.status = 'crashed'
+                        dummies.append(driver)
+                    else:
+                        # No crash, good to go!
+                        # TODO driver can have reached an edge, give destination reward
+                        driver.remember(rewards['clear'])
 
             # Driver's decision is computed, remove from action list
             action = None
 
+        # Return a list of crashed drivers (empty if there were none)
+        return dummies
