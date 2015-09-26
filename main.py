@@ -5,7 +5,9 @@ import sys
 from kivy.app import App
 from kivy.lib import osc
 from kivy.clock import Clock
-from kivy.properties import BooleanProperty, NumericProperty, ListProperty, ReferenceListProperty
+from kivy.properties import BooleanProperty, NumericProperty, ReferenceListProperty, ListProperty
+from kivy.uix.label import Label
+from kivy.clock import Clock
 from kivy.utils import platform
 platform = platform()
 
@@ -18,6 +20,10 @@ The super file which is above and beyond everything happening visually.
 Of course a multi-line comment is only justified if it contains multiple lines.
 """
 
+class Crossing(Label):
+    # north, east, south, west, middle
+    spot = ListProperty([0, 0, 0, 0, 0])
+
 # Class for graphical shizzle.
 class GUIApp(App):
     # Variables that automatically update GUI
@@ -29,6 +35,14 @@ class GUIApp(App):
     rows = NumericProperty(2)
     columns = NumericProperty(2)
     grid = ReferenceListProperty(rows, columns)
+
+    # def __init__(self, **kwargs):
+    #     super(GUIApp, self).__init__(**kwargs)
+    #
+    #     # Grid changes
+    #     self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
+    #     self.bind(grid=self._size_handler_trigger)
+
 
     # Initialize grid and such
     def build(self):
@@ -52,10 +66,12 @@ class GUIApp(App):
         # Read received messages
         Clock.schedule_interval(lambda *x: osc.readQueue(oscid), 0)
 
-        # variables
-        #self.grid = [2,2]
         # Send message asking for simulation status
         osc.sendMsg('/simu-status_ask', [], port=3000)
+
+        # Grid changes
+        self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
+        self.bind(grid=self._size_handler_trigger)
 
         if not self.server_running:
             print("Simulation server not running")
@@ -121,16 +137,19 @@ class GUIApp(App):
         self.cycle = 0
         self.root.ids.label.text += 'SERVER HAS CRASHED !@#!@#!@$\n\n'
 
+    def _size_handler(self, *largs):
+        print("Grid change")
+
 if __name__ == '__main__':
-    # This is where the program is called from
+    # This is the GUI for the agent simulation
     if len(sys.argv) > 1:
         # More arguments given than just the filename
-        print 'Oooh, you discovered the super secret corners of our program!'
-        print "Let's see what you shady things you expect from me..."
+        print('Oooh, you discovered the super secret corners of our program!')
+        print("Let's see what you shady things you expect from me...")
         # Handle optional command line arguments
         for argument in sys.argv[1:]:
             # Of course, we do not intend to comply. :)
-            print "Nope, don't know what to do with argument", argument
+            print("Nope, don't know what to do with argument", argument)
 
     # In the end, just run the program.
     GUIApp().run()

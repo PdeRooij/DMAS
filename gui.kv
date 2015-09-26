@@ -1,5 +1,9 @@
 #:kivy 1.9.0
 
+<Crossing>:
+    text: str(self.spot)
+    color: 0, 0, 0, 1
+
 BoxLayout:
     orientation: 'horizontal'
 
@@ -16,6 +20,11 @@ BoxLayout:
 
         cols: int(app.grid[0])
         rows: int(app.grid[1])
+        #on_rows: app.grid_change()
+
+#        Crossing
+#        Crossing
+#        Crossing
 
     # Menu
     BoxLayout:

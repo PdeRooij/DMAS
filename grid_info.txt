@@ -1,0 +1,9 @@
+[13:02] <NumesSanguis> How can I call a function when the number of cols/rows in a Gridlayout change?
+[13:02] <bionoid> NumesSanguis: all properties have an associated property event, on_<property name>
+[13:02] <ohaz> NumesSanguis: .cols and .rows are properties, so you should be able to bind to them
+[13:03] <ohaz> grid.on_cols and grid.on_rows
+[13:03] <NumesSanguis> ah yes that works, thanks :)
+[13:04] <bionoid> NumesSanguis: usually best to use Clock.create_trigger for this, so if both change, or they change several times, within 1 frame you will just call your handler once
+[13:05] <NumesSanguis> ok looking that up
+[13:05] <bionoid> NumesSanguis: like self._size_handler_trig = Clock.create_trigger(self._size_handler), then self.bind(cols=self._size_handler_trigger, rows=self._size_handler_trigger) and then implement self._size_handler
+[13:05] <bionoid> should be _trig/_trigger both places of course :P
