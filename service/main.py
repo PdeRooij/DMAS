@@ -1,7 +1,4 @@
 #!usr/bin/python
-
-__author__ = 'tom, stef, pieter'
-
 from sys import exit
 import osc  # from kivy.lib import osc
 from time import sleep
@@ -31,7 +28,9 @@ class Simulation:
 
     # Run the simulation
     def run(self):
-        print("HERE I HAVE TO DO STUFF 0.o")
+        # First do an intra- then an intercrossing transition
+        self.model.transintra()
+        self.model.transinter()
 
         #     Set statisticss
         # Agent stats [grid, north, east, south, west]

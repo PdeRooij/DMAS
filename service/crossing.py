@@ -56,13 +56,14 @@ class Crossing:
 
     # Returns the drivers that have to be moved elsewhere
     def translate_drivers(self):
-        # Make a list of all transitions
+        # Make a list of all transitions and a crashed list
         pieter_4_life = []
+        crashed = []
         for direction, driver in self.next.iteritems():
             if direction == 'crash':
-                # Forget about this, because it is handled by the model
-                pass
-            else:
+                # Just return the crashed drivers on this spot
+                crashed = driver    # This is then actually a list of crashed drivers
+            elif driver:
                 # Move this driver to next crossing
                 next_cr = self.loc
                 if direction == 'North':
@@ -80,7 +81,9 @@ class Crossing:
                 next_dr = self.dr[self.dr[direction]-2]     # Compute opposite direction (queue it will move into)
                 pieter_4_life.append((driver, next_cr, next_dr))
 
-        return pieter_4_life
+        # Empty next slots and return a list of transitions
+        self.next = {}.fromkeys(self.dr.directions)
+        return pieter_4_life, crashed
 
     # Puts a driver coming from another crossing in the right queue
     def enqueue(self, driver, direction):

@@ -4,7 +4,7 @@ __author__ = 'tom, stef, pieter'
 # It is implemented as a dictionary, where a specific parameter name is the key.
 
 
-class Parameters():
+class Parameters:
     # Creates a new set of parameters with standard values.
     def __init__(self):
         print("Init Parameters...")

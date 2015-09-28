@@ -41,7 +41,7 @@ class Situation:
         return actions
 
     # Computes outcome and rewards for involved drivers, returns a list of crashed drivers
-    def compute_outcome(self, actions, rewards):
+    def compute_outcome(self, actions, rewards, cr_loc):
         dummies = []    # List of crashed drivers
         # Consider all decisions
         for direction, action in actions:
@@ -72,8 +72,12 @@ class Situation:
                         dummies.append(driver)
                     else:
                         # No crash, good to go!
-                        # TODO driver can have reached an edge, give destination reward
-                        driver.remember(rewards['clear'])
+                        if driver.goal == cr_loc:
+                            # Driver is at destination and moves to edge, reward for finishing
+                            driver.remember(rewards['destination'])
+                        else:
+                            # Clear to move, give clear reward
+                            driver.remember(rewards['clear'])
 
             # Driver's decision is computed, remove from action list
             action = None
