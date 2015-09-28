@@ -26,7 +26,7 @@ class Memory:
             same = []  # List for similar memories
             # Consider all memories
             for m in self.mem.queue:
-                if m.equals(chunk):
+                if m == chunk:
                     # Similar situation found, add to list
                     same.append(m)
             # Return list of similar events

@@ -1,5 +1,6 @@
 from Queue import Queue
 from random import Random
+from copy import deepcopy
 from directions import Directions
 from situation import Situation
 
@@ -43,7 +44,8 @@ class Crossing:
             return Situation(traffic)
 
     # Move drivers to next location in crossing
-    def move_drivers(self, traffic, collision=False):
+    def move_drivers(self, situation, collision=False):
+        traffic = situation.traffic     # Get traffic situation
         # Check if there was a crash, if so, collision will contain involved drivers
         if collision:
             # There is a collision, put involved drivers in crash location
@@ -60,26 +62,28 @@ class Crossing:
         pieter_4_life = []
         crashed = []
         for direction, driver in self.next.iteritems():
-            if direction == 'crash':
-                # Just return the crashed drivers on this spot
-                crashed = driver    # This is then actually a list of crashed drivers
-            elif driver:
-                # Move this driver to next crossing
-                next_cr = self.loc
-                if direction == 'North':
-                    # Increases y by 1
-                    next_cr[1] += 1
-                elif direction == 'East':
-                    # Increase x by 1
-                    next_cr[0] += 1
-                elif direction == 'South':
-                    # Decrease y by 1
-                    next_cr[1] -= 1
-                elif direction == 'West':
-                    # Decrease x by 1
-                    next_cr[0] -= 1
-                next_dr = self.dr[self.dr[direction]-2]     # Compute opposite direction (queue it will move into)
-                pieter_4_life.append((driver, next_cr, next_dr))
+            if driver:
+                # There are actually people here...
+                if direction == 'crash':
+                    # Just return the crashed drivers on this spot
+                    crashed = driver    # This is then actually a list of crashed drivers
+                else:
+                    # Move this driver to next crossing
+                    next_cr = deepcopy(self.loc)
+                    if direction == 'North':
+                        # Increases y by 1
+                        next_cr[1] += 1
+                    elif direction == 'East':
+                        # Increase x by 1
+                        next_cr[0] += 1
+                    elif direction == 'South':
+                        # Decrease y by 1
+                        next_cr[1] -= 1
+                    elif direction == 'West':
+                        # Decrease x by 1
+                        next_cr[0] -= 1
+                    next_dr = self.dr[self.dr[direction]-2]     # Compute opposite direction (queue it will move into)
+                    pieter_4_life.append((driver, next_cr, next_dr))
 
         # Empty next slots and return a list of transitions
         self.next = {}.fromkeys(self.dr.directions)
@@ -92,7 +96,10 @@ class Crossing:
 
     # Spawns a driver at the edge of the grid.
     def put_spawn(self, driver, edge_x, edge_y):
-        edge = []   # List of directions that are on the edge
+        edge = []   # List of directions that are on an edge
+
+        print 'Crossing location:', self.loc
+        print 'Edges:', edge_x, edge_y
 
         # Calculate which direction is the edge
         if not self.loc[0]:

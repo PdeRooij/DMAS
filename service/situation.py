@@ -14,8 +14,8 @@ class Situation:
 
     # Distribute current situation to involved drivers from their viewpoint
     def distribute(self):
-        # Initialize list of chosen actions of drivers, tuple (direction, action)
-        actions = []
+        # Initialize dictionary of chosen actions of drivers (direction, action)
+        actions = {}
         # Consider every direction
         for direction, driver in self.traffic.iteritems():
             # Driver's view is simply a 3-item list, representing a driver from [left, ahead, right]
@@ -26,7 +26,7 @@ class Situation:
 
                 # Consider drivers from every other direction
                 # First get 'other' directions
-                other_dr = list(self.directions[self.directions[direction]:len(self.directions)]) +\
+                other_dr = list(self.directions[self.directions[direction]+1:len(self.directions)]) +\
                     list(self.directions[0:self.directions[direction]])
                 # NOTE: Composition is important here! Slicing required for [left, ahead, right]
                 # Loop over those directions, idx corresponds with view
@@ -36,7 +36,7 @@ class Situation:
                         view[idx] = 1
 
                 # Let the driver decide on situation and store action (direction, action)
-                actions.append((direction, driver.decide(view)))
+                actions[direction] = driver.decide(view)
 
         return actions
 
@@ -44,14 +44,14 @@ class Situation:
     def compute_outcome(self, actions, rewards, cr_loc):
         dummies = []    # List of crashed drivers
         # Consider all decisions
-        for direction, action in actions:
+        for direction, action in actions.iteritems():
             driver = self.traffic[direction]    # Get driver from that direction
             if action == 'wait':
                 driver.remember(rewards['wait'])
             elif action == 'go':
                 # Check if there is a driver from the right or the left
-                dr_left = self.directions[direction]+1
-                dr_right = self.directions[direction]-1
+                dr_left = self.directions[self.directions[direction]+1]
+                dr_right = self.directions[self.directions[direction]-1]
                 collision = False   # Flag whether there was a collision
                 # TODO this is not yet safe for drivers from all directions!!
                 for dr, other in zip([dr_left, dr_right], [self.traffic[dr_left], self.traffic[dr_right]]):

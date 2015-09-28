@@ -8,7 +8,7 @@ class Parameters:
     # Creates a new set of parameters with standard values.
     def __init__(self):
         print("Init Parameters...")
-        self.param = {'n_drivers': 2,
+        self.param = {'n_drivers': 10,
                       'grid_size': [3, 3],
                       'max_cycles': 1000,
                       'reward': {

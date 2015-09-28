@@ -25,6 +25,7 @@ class Model:
             cr_row = []
             col = dim[1]
             while col > 0:
+                print 'cr_loc:', dim[0]-row, dim[1]-col
                 cr_row.append(Crossing([dim[0]-row, dim[1]-col]))
                 col -= 1
             self.crossings.append(cr_row)
@@ -47,9 +48,11 @@ class Model:
         for crossing in [crossing for row in self.crossings for crossing in row]:
             # Resolve situations, make drivers decide and compute outcome
             sitrep = crossing.resolve()
-            actions = sitrep.distribute()
-            crashed = sitrep.compute_outcome(actions, self.parameters.get('reward'), crossing.loc)
-            crossing.move_drivers(sitrep, crashed)
+            if sitrep:
+                # There is actually something to do at this crossing
+                actions = sitrep.distribute()
+                crashed = sitrep.compute_outcome(actions, self.parameters.get('reward'), crossing.loc)
+                crossing.move_drivers(sitrep, crashed)
 
     # Phase in which drivers are moved between crossings
     def transinter(self):

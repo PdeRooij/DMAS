@@ -19,8 +19,8 @@ class Directions:
             # Input was a string, return index of that element
             return self.directions.index(item)
         elif isinstance(item, int):
-            # Int - get element at that index
-            return self.directions[item]
+            # Int - get element at that index (circularly)
+            return self.directions[item%4]
         elif isinstance(item, slice):
             # Slice - get elements according to start, stop, and step
             return [self.directions[i] for i in xrange(*item.indices(len(self.directions)))]
