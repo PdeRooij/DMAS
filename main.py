@@ -83,10 +83,12 @@ class GUIApp(App):
             service.start('service started')
             self.service = service
 
+    # GUI pause
     def on_pause(self):
         # Keep the app running when minimizing app
         return True
 
+    # GUI close
     def on_stop(self):
         # On Android, stop service
         if platform == 'android':
