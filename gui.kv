@@ -1,8 +1,16 @@
 #:kivy 1.9.0
+#:import path os.path
 
 <Crossing>:
     text: str(self.spot)
     color: 0, 0, 0, 1
+    canvas.before:
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: path.join('img','crossing_clean_empty.png')
 
 BoxLayout:
     orientation: 'horizontal'
@@ -10,19 +18,20 @@ BoxLayout:
     # Agent grid simulation
     GridLayout:
         id: gridy
-        # Green background
         size_hint_x: 0.8
-        canvas.before:
-            Color:
-                rgba: .6, 1, .6, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
+#        # Green background
+#        canvas.before:
+#            Color:
+#                rgba: .6, 1, .6, 1
+#            Rectangle:
+#                pos: self.pos
+#                size: self.size
 
         cols: int(app.grid[0])
         rows: int(app.grid[1])
         #on_rows: app.grid_change()
 
+#        Crossing
 #        Crossing
 #        Crossing
 #        Crossing
