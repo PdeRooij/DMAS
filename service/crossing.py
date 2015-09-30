@@ -18,7 +18,10 @@ class Crossing:
         self.dr = Directions()  # Store a directions instance
 
         # Make dictionary of roads from every direction
-        self.roads = {}.fromkeys(self.dr.directions, Queue())
+        # Note to self: fromkeys with Queue() is nice, but only makes one queue....
+        self.roads = {}.fromkeys(self.dr.directions)
+        for road in self.roads:
+            self.roads[road] = Queue()
         # Also a hold for if a driver decided to wait
         self.hold = {}.fromkeys(self.dr.directions)
         # And finally a slot for end-points of an animation
@@ -98,9 +101,6 @@ class Crossing:
     # Spawns a driver at the edge of the grid.
     def put_spawn(self, driver, edge_x, edge_y):
         edge = []   # List of directions that are on an edge
-
-        print 'Crossing location:', self.loc
-        print 'Edges:', edge_x, edge_y
 
         # Calculate which direction is the edge
         if not self.loc[0]:

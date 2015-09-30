@@ -16,6 +16,8 @@ class Model:
     def __init__(self):
         print("Init Model...")
         self.parameters = Parameters()
+        self.crossings = []
+        self.drivers = []
 
     # Resets the model to initial state
     def reset(self):
@@ -27,7 +29,6 @@ class Model:
             cr_row = []
             col = dim[1]
             while col > 0:
-                print 'cr_loc:', dim[0]-row, dim[1]-col
                 cr_row.append(Crossing([dim[0]-row, dim[1]-col]))
                 col -= 1
             self.crossings.append(cr_row)
