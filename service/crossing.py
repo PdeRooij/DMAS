@@ -87,6 +87,7 @@ class Crossing:
 
         # Empty next slots and return a list of transitions
         self.next = {}.fromkeys(self.dr.directions)
+        self.next['crash'] = None
         return pieter_4_life, crashed
 
     # Puts a driver coming from another crossing in the right queue
@@ -121,3 +122,18 @@ class Crossing:
             self.enqueue(driver, edge[1])
         else:
             self.enqueue(driver, edge[0])
+
+    # Generates a list of occupied spots for the GUI
+    def occupied(self):
+        occ = [0, 0, 0, 0, 0]   # Initialize list as if the crossing is entirely free
+
+        # Check whether queues are filled
+        for idx, dr in enumerate(self.dr[0::]):
+            occ[idx] = self.roads[dr].qsize()   # Just put the length of the queue in the list
+
+        # Check if there is a crash, if so, put last element at 1
+        if self.next['crash']:
+            occ[4] = 1
+
+        # Return list of occupancies
+        return occ

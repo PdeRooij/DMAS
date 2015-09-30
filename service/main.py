@@ -25,16 +25,17 @@ class Simulation:
         # Build model
         self.model = Model()
         self.agent_action = []
+        self.grid_agent_stats = None
 
     # Run the simulation
     def run(self):
         # First do an intra- then an intercrossing transition
-        self.model.transintra()
+        state = self.model.transintra()
         self.model.transinter()
 
-        #     Set statisticss
-        # Agent stats [grid, north, east, south, west]
-        self.grid_agent_stats = [[0, 0, 1, 1, 0], [1, 0, 1, 0, 0]]
+        # Set statistics
+        # Agent stats (for every grid point: [north, east, south, west, crash])
+        self.grid_agent_stats = state
 
 # osc for publishing/receiving messages to/from the listener (gui or non-gui)
 class osc_message:
@@ -51,10 +52,8 @@ class osc_message:
 
         # Init actual model
         self.sim = Simulation()
-
-        self.model = Model()
         self.cycle = 0
-        self.max_cycles = self.model.parameters.get('max_cycles')
+        self.max_cycles = self.sim.model.parameters.get('max_cycles')
         print("Max cycles: {}".format(self.max_cycles))
 
         # Send server is running

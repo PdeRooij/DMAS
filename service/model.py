@@ -44,8 +44,14 @@ class Model:
 
     # Handles the phase in which drivers are moved inside crossings
     def transintra(self):
+        # Make a (nested) list of starting positions at the beginning of the cycle
+        state = []
+
         # Iterate over every crossing
         for crossing in [crossing for row in self.crossings for crossing in row]:
+            # Ask for the state of a crossing and append to global state
+            state.append(crossing.occupied())
+
             # Resolve situations, make drivers decide and compute outcome
             sitrep = crossing.resolve()
             if sitrep:
@@ -53,6 +59,9 @@ class Model:
                 actions = sitrep.distribute()
                 crashed = sitrep.compute_outcome(actions, self.parameters.get('reward'), crossing.loc)
                 crossing.move_drivers(sitrep, crashed)
+
+        # Give global state to the simulation (GUI)
+        return state
 
     # Phase in which drivers are moved between crossings
     def transinter(self):
