@@ -3,13 +3,14 @@
 
 <Crossing>:
     text: str(self.spot)
+    color: 0, 0, 0, 1
     canvas.before:
+        Color:
+            rgba: 1,1,1,1
         Rectangle:
             pos: self.pos
             size: self.size
             source: path.join('img','crossing_clean_empty.png')
-
-    color: 0, 1, 1, 1
 
 BoxLayout:
     orientation: 'horizontal'
@@ -30,6 +31,7 @@ BoxLayout:
         rows: int(app.grid[1])
         #on_rows: app.grid_change()
 
+#        Crossing
 #        Crossing
 #        Crossing
 #        Crossing
