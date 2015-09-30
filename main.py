@@ -5,7 +5,7 @@ import sys
 from kivy.app import App
 from kivy.lib import osc
 from kivy.clock import Clock
-from kivy.properties import BooleanProperty, NumericProperty, ReferenceListProperty, ListProperty
+from kivy.properties import BooleanProperty, NumericProperty, ReferenceListProperty, ListProperty, ObjectProperty
 from kivy.uix.label import Label
 from kivy.utils import platform
 platform = platform()
@@ -22,6 +22,19 @@ Of course a multi-line comment is only justified if it contains multiple lines.
 class Crossing(Label):
     # north, east, south, west, middle
     spot = ListProperty([0, 0, 0, 0, 0])
+    grid_no = NumericProperty(-1)
+
+    def __init__(self, **kwargs):
+        super(Crossing, self).__init__(**kwargs)
+        # call draw_car when 'spot' values are changed
+        self.bind(spot=self.draw_car)
+
+    # Draw/removes car when variable spot is changed
+    def draw_car(self, *args):
+        print("Grid no: {}".format(self.grid_no))
+        print("draw car with: {}".format(self.spot))
+        #with self.canvas:
+
 
 # Class for graphical shizzle.
 class GUIApp(App):
@@ -158,11 +171,11 @@ class GUIApp(App):
             print(self.grid_spots)
             # Update GUI grid agents
             crossing_obj = App.get_running_app().root.ids.gridy.children
-            for i, s in enumerate(self.grid_spots):
-                print(s)
+            for i, s in enumerate(reversed(self.grid_spots)):
                 crossing_obj[i].spot = s
 
             self.grid_spots[:] = []
+            print("Grid updated ^-^")
         else:
             self.grid_spots.append(message[2:7])
 
@@ -175,7 +188,9 @@ class GUIApp(App):
 
         # Add crossings if grid is not full yet
         while crossing_len < grid_size:
-            App.get_running_app().root.ids.gridy.add_widget(Crossing())
+            print("crossing_len: {}".format(crossing_len))
+            # grid_no = grid id number
+            App.get_running_app().root.ids.gridy.add_widget(Crossing(grid_no=crossing_len))
             crossing_len += 1
 
         # Remove crossings one for one while more crossings than grid size

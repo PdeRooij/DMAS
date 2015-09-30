@@ -2,7 +2,7 @@
 #:import path os.path
 
 <Crossing>:
-    text: str(self.spot)
+    text: str(self.grid_no) + " " + str(self.spot)
     color: 0, 0, 0, 1
     canvas.before:
         Color:
@@ -11,6 +11,12 @@
             pos: self.pos
             size: self.size
             source: path.join('img','crossing_clean_empty.png')
+
+#    canvas:
+#        Rectangle:
+#            pos: self.pos
+#            size: self.size
+#            source: path.join('img','red-car2.png')
 
 BoxLayout:
     orientation: 'horizontal'
