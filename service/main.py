@@ -85,15 +85,18 @@ class osc_message:
                 sleep(0.5)
 
             # Send message server stopped
-            except (KeyboardInterrupt, SystemExit):
+            except:
                 self.send_server_stop()
                 exit()
 
     # Sends a message per grid with agent information
     def positions(self):
+        print("Positions sending")
         print(self.sim.state)
+        osc.sendMsg('/states', ["start", ], port=3002)
         for lst in self.sim.state:
-             osc.sendMsg('/states', [lst], port=3002)
+             osc.sendMsg('/states', [lst[0], lst[1], lst[2], lst[3], lst[4]], port=3002)
+        osc.sendMsg('/states', ["end", ], port=3002)
 
     # Sends statistics
     def statistics(self):
@@ -122,7 +125,7 @@ class osc_message:
     def simulation_status_send(self, *args):
         print("Send simulation status")
         msg = []
-        osc.sendMsg('/simu-status', [self.can_start, self.cycle, ], port=3002)
+        osc.sendMsg('/simu-status', [self.can_start, self.cycle, self.sim.grid_size[0], self.sim.grid_size[1]], port=3002)
 
     # Send text message "Hello world" to listener
     def send_hello(self, *args):

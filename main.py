@@ -74,6 +74,9 @@ class GUIApp(App):
         # self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
         # self.bind(grid=self._size_handler_trigger)
 
+        # normal variables
+        self.grid_spots = []
+
         if not self.server_running:
             print("Simulation server not running")
             self.root.ids.label.text = "Simulation server not running :(\n"
@@ -118,6 +121,9 @@ class GUIApp(App):
         osc.sendMsg('/start', [False, ], port=3000)
         self.start_simu = True
         self.cycle = 0
+        crossing_obj = App.get_running_app().root.ids.gridy.children
+        for child in crossing_obj:
+            child.spot = [0, 0, 0, 0, 0]
 
     # Receive whether the service and/or simulation is running
     def simulation_status_receive(self, message, *args):
@@ -127,6 +133,7 @@ class GUIApp(App):
         self.cycle = message[3]
         self.root.ids.label.text += "Current cycle: {}\n".format(self.cycle)
         self.server_running = True
+        self.grid = [message[4], message[5]]
 
     # Print out the received message "Hello world"... printed out :(   now it prints cycle status
     def output_hello(self, message, *args):
@@ -134,15 +141,30 @@ class GUIApp(App):
         self.root.ids.label.text += '{}\n'.format(message[2])
         self.cycle = message[2]
 
+    # Server sends message it crashed
     def server_stopped(self, message, *args):
         self.server_running = False
         self.start_simu = True
         self.cycle = 0
         self.root.ids.label.text += 'SERVER HAS CRASHED !@#!@#!@$\n\n'
 
+    # Update grid agents based on server message
     def grid_update(self, message, *args):
         print(message)
-        print(args)
+        if message[2] == "start":
+            print("Starting grid update...")
+        elif message[2] == "end":
+            print("All grid messages received")
+            print(self.grid_spots)
+            # Update GUI grid agents
+            crossing_obj = App.get_running_app().root.ids.gridy.children
+            for i, s in enumerate(self.grid_spots):
+                print(s)
+                crossing_obj[i].spot = s
+
+            self.grid_spots[:] = []
+        else:
+            self.grid_spots.append(message[2:7])
 
     def _size_handler(self, *largs):
         print("Grid change")
