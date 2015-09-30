@@ -38,7 +38,7 @@ BoxLayout:
         Button:
             size_hint_y: 0.15
             text: 'Start' if app.start_simu == True else 'Pause'
-            font_size: '18sp'
+            font_size: self.height * .4
             disabled: not app.server_running
             background_color: [0, 1, 0, 1] if app.start_simu == True else [1, 1, 0, 1]
             on_release: app.start_simulation()
@@ -47,7 +47,7 @@ BoxLayout:
         Button:
             size_hint_y: 0.15
             text: 'Stop'
-            font_size: '18sp'
+            font_size: self.height * .4
             disabled: app.cycle == 0
             background_color: [1, 0, 0, 1]
             on_press: app.stop_simulation()
@@ -59,12 +59,15 @@ BoxLayout:
             Label:
                 size_hint_x: 1.25
                 text: "Cycle: {}".format(app.cycle)
+                font_size: self.height * .6
 
             TextInput:
                 size_hint_x: 0.75
                 text: str(int(app.max_cycle))
                 multiline: False
                 disabled: True if app.cycle != 0 else False
+                padding: [3, 1]
+                font_size: self.height * .7
 
         Slider:
             size_hint_y: 0.08
@@ -83,12 +86,15 @@ BoxLayout:
             Label:
                 size_hint_x: 1.25
                 text: "Agents:"
+                font_size: self.height * .6
 
             TextInput:
                 size_hint_x: 0.75
                 text: str(int(app.agents_num))
                 multiline: False
                 disabled: True if app.cycle != 0 else False
+                padding: [3, 1]
+                font_size: self.height * .7
 
         Slider:
             size_hint_y: 0.08
@@ -107,22 +113,28 @@ BoxLayout:
             Label:
                 size_hint_x: 1.25
                 text: "Grid:"
+                font_size: self.height * .6
 
             TextInput:
                 size_hint_x: 0.30
                 text: str(int(app.grid[0]))
                 multiline: False
                 disabled: True if app.cycle != 0 else False
+                padding: [3, 1]
+                font_size: self.height * .7
 
             Label:
                 size_hint_x: 0.15
                 text: "x"
+                font_size: self.height * .6
 
             TextInput:
                 size_hint_x: 0.30
                 text: str(int(app.grid[1]))
                 multiline: False
                 disabled: True if app.cycle != 0 else False
+                padding: [3, 1]
+                font_size: self.height * .7
 
         Slider:
             size_hint_y: 0.08
@@ -147,8 +159,8 @@ BoxLayout:
 
         # Print simulation status
         ScrollView:
-            size_hint_y: 0.60
-            # Green background
+            size_hint_y: 0.40
+            # White background
             canvas.before:
                 Color:
                     rgba: 1, 1, 1, 1
