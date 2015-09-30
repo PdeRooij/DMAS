@@ -64,6 +64,8 @@ class GUIApp(App):
         osc.bind(oscid, self.server_stopped, '/server-stop')
         # Read received messages
         Clock.schedule_interval(lambda *x: osc.readQueue(oscid), 0)
+        # Receive grid status
+        osc.bind(oscid, self.grid_update, '/states')
 
         # Send message asking for simulation status
         osc.sendMsg('/simu-status_ask', [], port=3000)
@@ -137,6 +139,10 @@ class GUIApp(App):
         self.start_simu = True
         self.cycle = 0
         self.root.ids.label.text += 'SERVER HAS CRASHED !@#!@#!@$\n\n'
+
+    def grid_update(self, message, *args):
+        print(message)
+        print(args)
 
     def _size_handler(self, *largs):
         print("Grid change")

@@ -25,17 +25,18 @@ class Simulation:
         # Build model
         self.model = Model()
         self.agent_action = []
-        self.grid_agent_stats = None
+        self.agent_num = 5
+        self.grid_size = [2, 2]
 
     # Run the simulation
     def run(self):
         # First do an intra- then an intercrossing transition
-        state = self.model.transintra()
+        self.state = self.model.transintra()
         self.model.transinter()
 
         # Set statistics
         # Agent stats (for every grid point: [north, east, south, west, crash])
-        self.grid_agent_stats = state
+        #print (self.grid_agent_stats)
 
 # osc for publishing/receiving messages to/from the listener (gui or non-gui)
 class osc_message:
@@ -45,9 +46,9 @@ class osc_message:
         # Receive start/stop message
         osc.bind(oscid, self.startquit, '/start')
         self.can_start = False
-        # Send status of simulation
+        # Cycle info?
         osc.bind(oscid, self.send_hello, '/hello')
-        # Hello world messages
+        # Send status of simulation
         osc.bind(oscid, self.simulation_status_send, '/simu-status_ask')
 
         # Init actual model
@@ -71,6 +72,9 @@ class osc_message:
                     # Agent stuff
                     self.sim.run()
 
+                    # Send agent positions
+                    self.positions()
+
                     # Statistics stuff
                     self.statistics()
 
@@ -85,8 +89,15 @@ class osc_message:
                 self.send_server_stop()
                 exit()
 
+    # Sends a message per grid with agent information
+    def positions(self):
+        print(self.sim.state)
+        for lst in self.sim.state:
+             osc.sendMsg('/states', [lst], port=3002)
+
+    # Sends statistics
     def statistics(self):
-        print(self.sim.grid_agent_stats)
+        print("Statistics")
 
     # Change simulation status based on message from listener
     def startquit(self, can_start, *args):
@@ -97,8 +108,8 @@ class osc_message:
                   .format(can_start[2], can_start[3], can_start[4], can_start[5], can_start[6]))
             self.can_start = True
             self.max_cycles = can_start[3]
-            self.agent_num = can_start[4]
-            self.grid = [can_start[5], can_start[6]]
+            self.sim.agent_num = can_start[4]
+            self.sim.grid_size = [can_start[5], can_start[6]]
         elif can_start[2] == False:
             print("\n    Simulation ended    ")
             self.cycle = 0
