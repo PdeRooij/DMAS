@@ -111,8 +111,9 @@ class osc_message:
                   .format(can_start[2], can_start[3], can_start[4], can_start[5], can_start[6]))
             self.can_start = True
             self.max_cycles = can_start[3]
-            self.sim.agent_num = can_start[4]
-            self.sim.grid_size = [can_start[5], can_start[6]]
+            self.sim.model.parameters.set('n_drivers', can_start[4])
+            self.sim.model.parameters.set('grid_size', [can_start[5], can_start[6]])
+            self.sim.model.reset()
         elif can_start[2] == False:
             print("\n    Simulation ended    ")
             self.cycle = 0

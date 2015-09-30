@@ -17,6 +17,8 @@ class Model:
         print("Init Model...")
         self.parameters = Parameters()
 
+    # Resets the model to initial state
+    def reset(self):
         # Spawn crossings
         dim = self.parameters.get('grid_size')
         self.crossings = []     # Crossings in grid orientation
@@ -92,7 +94,7 @@ class Model:
                 new_loc = driver.respawn(dim[0], dim[1])
                 self.crossings[new_loc[0]][new_loc[1]].put_spawn(driver, dim[0]-1, dim[1]-1)
 
-    # DEPRACATED PROCEDURE SINCE SEGREGATION
+    # DEPRECATED PROCEDURE SINCE SEGREGATION
     # A procedure to update the model to the next cycle
     def update(self):
 
