@@ -126,7 +126,9 @@ class osc_message:
     def simulation_status_send(self, *args):
         print("Send simulation status")
         msg = []
-        osc.sendMsg('/simu-status', [self.can_start, self.cycle, self.sim.grid_size[0], self.sim.grid_size[1]], port=3002)
+        grid_size = self.sim.model.parameters.get('grid_size')
+        print(grid_size)
+        osc.sendMsg('/simu-status', [self.can_start, self.cycle, grid_size[0], grid_size[1]], port=3002)
 
     # Send text message "Hello world" to listener
     def send_hello(self, *args):

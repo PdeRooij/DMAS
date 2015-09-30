@@ -166,6 +166,7 @@ class GUIApp(App):
         print(message)
         if message[2] == "start":
             print("Starting grid update...")
+            self.grid_spots[:] = []
         elif message[2] == "end":
             print("All grid messages received")
             print(self.grid_spots)
@@ -174,7 +175,7 @@ class GUIApp(App):
             for i, s in enumerate(reversed(self.grid_spots)):
                 crossing_obj[i].spot = s
 
-            self.grid_spots[:] = []
+            #self.grid_spots[:] = []
             print("Grid updated ^-^")
         else:
             self.grid_spots.append(message[2:7])
@@ -195,7 +196,7 @@ class GUIApp(App):
 
         # Remove crossings one for one while more crossings than grid size
         while crossing_len > grid_size:
-            App.get_running_app().root.ids.gridy.remove_widget(crossing_obj[-1])
+            App.get_running_app().root.ids.gridy.remove_widget(crossing_obj[0])
             crossing_len -= 1
 
 
