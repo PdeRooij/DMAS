@@ -25,8 +25,6 @@ class Simulation:
         # Build model
         self.model = Model()
         self.agent_action = []
-        self.agent_num = 5
-        self.grid_size = [2, 2]
 
     # Run the simulation
     def run(self):
