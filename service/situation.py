@@ -11,6 +11,7 @@ class Situation:
     def __init__(self, traffic):
         self.directions = Directions()
         self.traffic = traffic  # Dictionary of drivers from a certain direction
+        self.move = {}.fromkeys(self.directions.directions)     # Dictionary of drivers to be moved
 
     # Distribute current situation to involved drivers from their viewpoint
     def distribute(self):
@@ -65,19 +66,26 @@ class Situation:
                             other.status = 'crashed'
                             dummies.append(other)
                             actions[dr] = None
-                    if collision:
-                        # There was a collision, give this driver corresponding reward
-                        driver.remember(rewards['crash'])
-                        driver.status = 'crashed'
-                        dummies.append(driver)
+                            other = None    # Remove from hold
+
+                if collision:
+                    # There was a collision, give this driver corresponding reward
+                    driver.remember(rewards['crash'])
+                    driver.status = 'crashed'
+                    dummies.append(driver)
+                    driver = None   # Remove from hold
+                else:
+                    # No crash, good to go!
+                    if driver.goal == cr_loc:
+                        # Driver is at destination and moves to edge, reward for finishing
+                        driver.remember(rewards['destination'])
                     else:
-                        # No crash, good to go!
-                        if driver.goal == cr_loc:
-                            # Driver is at destination and moves to edge, reward for finishing
-                            driver.remember(rewards['destination'])
-                        else:
-                            # Clear to move, give clear reward
-                            driver.remember(rewards['clear'])
+                        # Clear to move, give clear reward
+                        driver.remember(rewards['clear'])
+
+                    # Prepare for movement
+                    self.move[direction] = driver
+                    driver = None   # Ensures the driver is not in hold anymore
 
             # Driver's decision is computed, remove from action list
             action = None
