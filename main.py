@@ -32,17 +32,22 @@ class Crossing(Label):
     def __init__(self, **kwargs):
         super(Crossing, self).__init__(**kwargs)
         # call draw_car when 'spot' values are changed
-        self.bind(spot=self.draw_car)
+        #self.bind(spot=self.draw_car)
 
-    # Draw/removes car when variable spot is changed
+    # Draw/removes car when variable spot is changed !!! NOT USED !!!
     def draw_car(self, *args):
         print("Grid no: {}".format(self.grid_no))
         print("draw car with: {}".format(self.spot))
         print(self.pos)
-        with self.canvas:
-            Color(1, 1, 1, 1)
-            Rectangle(source=path.join('img','red-car.png'), pos=[self.pos[0]/2, self.pos[1]/2],
-                      size=[self.size[0]/5, self.size[1]/5])
+        # with self.canvas:
+        #     Color(1, 1, 1, 1)
+            # Rectangle(source=path.join('img','red-car.png'), pos_hint={'top': .9},
+            #           size=[self.size[0]/5, self.size[1]/5])
+            # Rectangle(source=path.join('img','red-car.png'), pos_hint={'right': .9},
+            #           size=[self.size[0]/5, self.size[1]/5])
+            # Rectangle(source=path.join('img','red-car.png'), pos=[self.pos[0]+(self.size[0]/2.5),
+            #                                                       self.pos[1]+self.size[1]/1.3],
+            #           size=[self.size[0]/5, self.size[1]/5])
             # if self.spot[0] >= 1:
             #     Rectangle(source=path.join('img','red-car.png'), pos_hint = {'top': .9},
             #               size=[self.size[0]/5, self.size[1]/5])
