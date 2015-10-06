@@ -8,6 +8,7 @@ class Statistics:
 
 
 
+
 """ to log:
 
 number of agents in the grid
