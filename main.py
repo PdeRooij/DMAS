@@ -8,6 +8,8 @@ from kivy.clock import Clock
 from kivy.properties import BooleanProperty, NumericProperty, ReferenceListProperty, ListProperty, ObjectProperty
 from kivy.uix.label import Label
 from kivy.utils import platform
+from kivy.graphics import Rectangle, Color
+from os import path
 platform = platform()
 
 from kivy.config import Config
@@ -19,6 +21,9 @@ The super file which is above and beyond everything happening visually.
 Of course a multi-line comment is only justified if it contains multiple lines.
 """
 
+# class Car(ObjectProperty):
+#     pass
+
 class Crossing(Label):
     # north, east, south, west, middle
     spot = ListProperty([0, 0, 0, 0, 0])
@@ -27,13 +32,33 @@ class Crossing(Label):
     def __init__(self, **kwargs):
         super(Crossing, self).__init__(**kwargs)
         # call draw_car when 'spot' values are changed
-        self.bind(spot=self.draw_car)
+        #self.bind(spot=self.draw_car)
 
-    # Draw/removes car when variable spot is changed
+    # Draw/removes car when variable spot is changed !!! NOT USED !!!
     def draw_car(self, *args):
         print("Grid no: {}".format(self.grid_no))
         print("draw car with: {}".format(self.spot))
-        #with self.canvas:
+        print(self.pos)
+        # with self.canvas:
+        #     Color(1, 1, 1, 1)
+            # Rectangle(source=path.join('img','red-car.png'), pos_hint={'top': .9},
+            #           size=[self.size[0]/5, self.size[1]/5])
+            # Rectangle(source=path.join('img','red-car.png'), pos_hint={'right': .9},
+            #           size=[self.size[0]/5, self.size[1]/5])
+            # Rectangle(source=path.join('img','red-car.png'), pos=[self.pos[0]+(self.size[0]/2.5),
+            #                                                       self.pos[1]+self.size[1]/1.3],
+            #           size=[self.size[0]/5, self.size[1]/5])
+            # if self.spot[0] >= 1:
+            #     Rectangle(source=path.join('img','red-car.png'), pos_hint = {'top': .9},
+            #               size=[self.size[0]/5, self.size[1]/5])
+            # if self.spot[1] >= 1:
+            #     Rectangle(source=path.join('img','red-car.png'), pos= {'right': .9},
+            #               size=[self.size[0]/5, self.size[1]/5])
+            # if self.spot[2] >= 1:
+            #     Rectangle(source=path.join('img','red-car.png'), pos=[self.pos[0]/2, self.pos[1]/2],
+            #               size=[self.size[0]/5, self.size[1]/5])
+        #self.canvas.add(path.join('img','red-car2.png'))
+        #self.canvas.add(Image(pos=self.pos, size=(100, 100)))
 
 
 # Class for graphical shizzle.
