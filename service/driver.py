@@ -20,6 +20,11 @@ class Driver:
         self.goal = [0, 0]      # Where the driver is headed to
         self.heading = [0, 1, 0]    # Heading at the moment (always ahead as of yet)
         self.status = 'spawning'    # Status (driving, queued, etc.)
+        self.log = {'crash' : 0,    # Driver's log containing stats
+                    'go' : 0,
+                    'wait' : 0,
+                    'last_action' : 'none'
+                    }
 
     # Decide what to do in given situation
     def decide(self, traffic):
@@ -51,6 +56,9 @@ class Driver:
                 self.act = 'go'
                 self.status = 'driving'
 
+        # Add action to the log
+        self.log['last_action'] = self.act
+        self.log[self.act] += 1
         # Finally return the decision
         return self.act
 
