@@ -30,14 +30,17 @@ class Crossing:
 
     # Take next in queues, generate traffic situation
     def resolve(self):
+        gen = False     # Only make a situation if there is traffic (hopefully reducing overhead)
         # First take the drivers already on hold
         traffic = self.hold
-        gen = False     # Only make a situation if there is traffic (hopefully reducing overhead)
 
         # Check whether there are drivers queued
         for direction, q in self.roads.iteritems():
+            if traffic[direction]:
+                # There was a driver in the hold, so do generate a situation
+                gen = True
             # Only dequeue a driver if there wasn't already one on hold and there is a queue
-            if not traffic[direction] and not q.empty():
+            elif not q.empty():
                 gen = True  # Creating a situation is justified
                 # There is a driver queued here, add to situation
                 traffic[direction] = q.get()
