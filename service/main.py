@@ -1,6 +1,7 @@
 #!usr/bin/python
 from sys import exit
 import osc  # from kivy.lib import osc
+import traceback
 from time import sleep
 from model import Model
 
@@ -24,7 +25,7 @@ class Simulation:
         print("\nInit master...")
         # Build model
         self.model = Model()
-        self.agent_action = []
+        self.state = None
 
     # Run the simulation
     def run(self):
@@ -84,6 +85,7 @@ class osc_message:
 
             # Send message server stopped
             except:
+                traceback.print_exc()   # Please tell me what is wrong then...
                 self.send_server_stop()
                 exit()
 

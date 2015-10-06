@@ -24,15 +24,16 @@ class Model:
         # Spawn crossings
         dim = self.parameters.get('grid_size')
         self.crossings = []     # Crossings in grid orientation
-        row = dim[0]
-        while row > 0:
+        row = 0
+        # Notice!! Location is [x, y], but in the grid, one first has to access row, then column (so [y][x])
+        while row < dim[1]:
             cr_row = []
-            col = dim[1]
-            while col > 0:
-                cr_row.append(Crossing([dim[0]-row, dim[1]-col]))
-                col -= 1
+            col = 0
+            while col < dim[0]:
+                cr_row.append(Crossing([col, row]))
+                col += 1
             self.crossings.append(cr_row)
-            row -= 1
+            row += 1
 
         # Spawn drivers
         self.drivers = []
@@ -42,7 +43,7 @@ class Model:
             self.drivers.append(driver)
             # Put at a grid edge
             new_loc = driver.respawn(dim[0], dim[1])
-            self.crossings[new_loc[0]][new_loc[1]].put_spawn(driver, dim[0]-1, dim[1]-1)
+            self.crossings[new_loc[1]][new_loc[0]].put_spawn(driver, dim[0]-1, dim[1]-1)
             n -= 1
 
     # Handles the phase in which drivers are moved inside crossings
@@ -83,17 +84,17 @@ class Model:
                     driver.status = 'finished'
                     # Also make this driver respawn
                     new_loc = driver.respawn(dim[0], dim[1])
-                    self.crossings[new_loc[0]][new_loc[1]].put_spawn(driver, dim[0]-1, dim[1]-1)
+                    self.crossings[new_loc[1]][new_loc[0]].put_spawn(driver, dim[0]-1, dim[1]-1)
                 else:
                     # Just move to next crossing
-                    self.crossings[n_cr[0]][n_cr[1]].enqueue(driver, n_dr)
+                    self.crossings[n_cr[1]][n_cr[0]].enqueue(driver, n_dr)
 
             # Respawn crashed drivers
             # NOTE: do this after moving within crossing,
             # because they still have to go to the middle, generating a transition
             for driver in crashed:
                 new_loc = driver.respawn(dim[0], dim[1])
-                self.crossings[new_loc[0]][new_loc[1]].put_spawn(driver, dim[0]-1, dim[1]-1)
+                self.crossings[new_loc[1]][new_loc[0]].put_spawn(driver, dim[0]-1, dim[1]-1)
 
     # DEPRECATED PROCEDURE SINCE SEGREGATION
     # A procedure to update the model to the next cycle
