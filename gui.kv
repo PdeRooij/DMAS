@@ -46,13 +46,13 @@
         Rectangle:
             pos: [self.pos[0]+self.size[0]/10, self.pos[1]+(self.size[1]/2.3)]
             size: [self.size[0]/5, self.size[1]/8]
-            source: path.join('img','red-car.png') if self.spot[2] >= 1 else path.join('img','trp_bg.png')
+            source: path.join('img','red-car.png') if self.spot[0] >= 1 else path.join('img','trp_bg.png')
 
         # Bottom car
         Rectangle:
             pos: [self.pos[0]+self.size[0]/1.4, self.pos[1]+(self.size[1]/2.3)]
             size: [self.size[0]/5, self.size[1]/8]
-            source: path.join('img','red-car.png') if self.spot[0] >= 1 else path.join('img','trp_bg.png')
+            source: path.join('img','red-car.png') if self.spot[2] >= 1 else path.join('img','trp_bg.png')
 
         PopMatrix
 

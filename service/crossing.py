@@ -38,14 +38,17 @@ class Crossing:
 
     # Take next in queues, generate traffic situation
     def resolve(self):
+        gen = False     # Only make a situation if there is traffic (hopefully reducing overhead)
         # First take the drivers already on hold
         traffic = self.hold
-        gen = False     # Only make a situation if there is traffic (hopefully reducing overhead)
 
         # Check whether there are drivers queued
         for direction, q in self.roads.iteritems():
+            if traffic[direction]:
+                # There was a driver in the hold, so do generate a situation
+                gen = True
             # Only dequeue a driver if there wasn't already one on hold and there is a queue
-            if not traffic[direction] and not q.empty():
+            elif not q.empty():
                 gen = True  # Creating a situation is justified
                 # There is a driver queued here, add to situation
                 traffic[direction] = q.get()
@@ -56,13 +59,14 @@ class Crossing:
 
     # Move drivers to next location in crossing
     def move_drivers(self, situation, collision=False):
-        traffic = situation.traffic     # Get traffic situation
         # Check if there was a crash, if so, collision will contain involved drivers
         if collision:
             # There is a collision, put involved drivers in crash location
             self.next['crash'] = collision
+
+        move = situation.move    # Get drivers to be moved
         # Move drivers to the opposite side
-        for direction, driver in traffic.iteritems():
+        for direction, driver in move.iteritems():
             if driver:
                 # There is a driver, move him to the next in the opposite direction
                 self.next[self.dr[self.dr[direction]-2]] = driver
@@ -111,12 +115,13 @@ class Crossing:
         edge = []   # List of directions that are on an edge
 
         # Calculate which direction is the edge
-        if not self.loc[0]:
-            # X is zero, so crossing is at the left edge of the grid
-            edge.append('West')
-        if not self.loc[1]:
-            # Y is zero, so crossing is at the top edge of the grid
-            edge.append('North')
+        # Uncomment to spawn at every possible edge
+        # if not self.loc[0]:
+        #     # X is zero, so crossing is at the left edge of the grid
+        #     edge.append('West')
+        # if not self.loc[1]:
+        #     # Y is zero, so crossing is at the top edge of the grid
+        #     edge.append('North')
         if self.loc[0] == edge_x:
             # X equals maximal x, so crossing is at the right edge of the grid
             edge.append('East')
@@ -139,9 +144,9 @@ class Crossing:
         for idx, dr in enumerate(self.dr[0::]):
             occ[idx] = self.roads[dr].qsize()   # Just put the length of the queue in the list
 
-        # Check if there is a crash, if so, put last element at 1
+        # Check if there is a crash, if so, set last element of occ to the number of crashed drivers
         if self.next['crash']:
-            occ[4] = 1
+            occ[4] = len(self.next['crash'])
 
         # Return list of occupancies
         return occ
