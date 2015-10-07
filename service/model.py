@@ -1,6 +1,7 @@
 from parameters import Parameters
 from crossing import Crossing
 from driver import Driver
+from statistics import Statistics
 
 __author__ = 'tom, stef, pieter'
 
