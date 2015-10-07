@@ -26,7 +26,7 @@ Of course a multi-line comment is only justified if it contains multiple lines.
 
 class Crossing(Label):
     # north, east, south, west, middle
-    spot = ListProperty([0, 0, 0, 0, 0])
+    spot = ListProperty([1, 0, 0, 0, 0])
     grid_no = NumericProperty(-1)
 
     def __init__(self, **kwargs):
