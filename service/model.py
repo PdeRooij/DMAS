@@ -53,17 +53,17 @@ class Model:
 
         # Iterate over every crossing
         for crossing in [crossing for row in self.crossings for crossing in row]:
-            # Ask for the state of a crossing and append to global state
-            state.append(crossing.occupied())
-
             # Resolve situations, make drivers decide and compute outcome
             sitrep = crossing.resolve()
             if sitrep:
                 # There is actually something to do at this crossing
                 actions = sitrep.distribute()
                 crashed = sitrep.compute_outcome(actions, self.parameters.get('reward'), crossing.loc)
-                state[-1][-1] = len(crashed)    # Also add crashed drivers to state
+                # state[-1][-1] = len(crashed)    # Also add crashed drivers to state
                 crossing.move_drivers(sitrep, crashed)
+
+            # Ask for the state of a crossing and append to global state
+            state.append(crossing.occupied())
 
         # Give global state to the simulation (GUI)
         return state

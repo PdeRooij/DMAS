@@ -78,14 +78,14 @@ class Crossing:
                     # Move this driver to next crossing
                     next_cr = deepcopy(self.loc)
                     if direction == 'North':
-                        # Increases y by 1
-                        next_cr[1] += 1
+                        # Decrease y by 1
+                        next_cr[1] -= 1
                     elif direction == 'East':
                         # Increase x by 1
                         next_cr[0] += 1
                     elif direction == 'South':
-                        # Decrease y by 1
-                        next_cr[1] -= 1
+                        # Increase y by 1
+                        next_cr[1] += 1
                     elif direction == 'West':
                         # Decrease x by 1
                         next_cr[0] -= 1
@@ -134,10 +134,13 @@ class Crossing:
 
         # Check whether queues are filled
         for idx, dr in enumerate(self.dr[0::]):
+            occ[idx] = self.roads[dr].qsize()   # Just put the length of the queue in the list
             if self.hold[dr]:
                 # Also driver in hold, add to queue
                 occ[idx] += 1
-            occ[idx] = self.roads[dr].qsize()   # Just put the length of the queue in the list
+            if self.next[dr]:
+                # There is a driver in the next, add to list of occupancies
+                occ[idx] += 1
 
         # Check if there is a crash, if so, set last element of occ to the number of crashed drivers
         if self.next['crash']:
