@@ -107,12 +107,13 @@ class Crossing:
         edge = []   # List of directions that are on an edge
 
         # Calculate which direction is the edge
-        if not self.loc[0]:
-            # X is zero, so crossing is at the left edge of the grid
-            edge.append('West')
-        if not self.loc[1]:
-            # Y is zero, so crossing is at the top edge of the grid
-            edge.append('North')
+        # Uncomment to spawn at every possible edge
+        # if not self.loc[0]:
+        #     # X is zero, so crossing is at the left edge of the grid
+        #     edge.append('West')
+        # if not self.loc[1]:
+        #     # Y is zero, so crossing is at the top edge of the grid
+        #     edge.append('North')
         if self.loc[0] == edge_x:
             # X equals maximal x, so crossing is at the right edge of the grid
             edge.append('East')
