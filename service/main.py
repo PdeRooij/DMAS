@@ -68,6 +68,10 @@ class osc_message:
                 # Only run simulation when started and max cycles not reached
                 #print("Start: {}, Max Cycles: {}".format(self.can_start, self.max_cycles))
                 if self.can_start == True and self.cycle < self.max_cycles:
+                    # Reset model
+                    if self.cycle == 0:
+                        self.sim.model.reset()
+
                     # Agent stuff
                     self.sim.run()
 
@@ -81,7 +85,7 @@ class osc_message:
                     self.cycle += 1
                     self.send_hello()
 
-                sleep(0.5)
+                sleep(1)
 
             # Send message server stopped
             except:
@@ -113,7 +117,6 @@ class osc_message:
             self.max_cycles = can_start[3]
             self.sim.model.parameters.set('n_drivers', can_start[4])
             self.sim.model.parameters.set('grid_size', [can_start[5], can_start[6]])
-            self.sim.model.reset()
         elif can_start[2] == False:
             print("\n    Simulation ended    ")
             self.cycle = 0
@@ -129,6 +132,10 @@ class osc_message:
         grid_size = self.sim.model.parameters.get('grid_size')
         print(grid_size)
         osc.sendMsg('/simu-status', [self.can_start, self.cycle, grid_size[0], grid_size[1]], port=3002)
+        # Send agent positions
+        sleep(0.5)
+        if self.cycle > 0:
+            self.positions()
 
     # Send text message "Hello world" to listener
     def send_hello(self, *args):
