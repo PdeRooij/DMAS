@@ -134,6 +134,9 @@ class Crossing:
 
         # Check whether queues are filled
         for idx, dr in enumerate(self.dr[0::]):
+            if self.hold[dr]:
+                # Also driver in hold, add to queue
+                occ[idx] += 1
             occ[idx] = self.roads[dr].qsize()   # Just put the length of the queue in the list
 
         # Check if there is a crash, if so, set last element of occ to the number of crashed drivers

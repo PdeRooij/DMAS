@@ -62,6 +62,7 @@ class Model:
                 # There is actually something to do at this crossing
                 actions = sitrep.distribute()
                 crashed = sitrep.compute_outcome(actions, self.parameters.get('reward'), crossing.loc)
+                state[-1][-1] = len(crashed)    # Also add crashed drivers to state
                 crossing.move_drivers(sitrep, crashed)
 
         # Give global state to the simulation (GUI)
