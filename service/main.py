@@ -28,10 +28,15 @@ class Simulation:
         self.state = None
 
     # Run the simulation
-    def run(self):
-        # First do an intra- then an intercrossing transition
+    def run(self, cycle):
+        # Reset model
+        if cycle == 0:
+            self.model.reset()
+        # First do an inter- then an intracrossing transition
+        else:
+            # Only do transinter if at least one time transintra has run
+            self.model.transinter()
         self.state = self.model.transintra()
-        self.model.transinter()
 
         # Set statistics
         # Agent stats (for every grid point: [north, east, south, west, crash])
@@ -68,12 +73,8 @@ class osc_message:
                 # Only run simulation when started and max cycles not reached
                 #print("Start: {}, Max Cycles: {}".format(self.can_start, self.max_cycles))
                 if self.can_start == True and self.cycle < self.max_cycles:
-                    # Reset model
-                    if self.cycle == 0:
-                        self.sim.model.reset()
-
                     # Agent stuff
-                    self.sim.run()
+                    self.sim.run(self.cycle)
 
                     # Send agent positions
                     self.positions()

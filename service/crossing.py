@@ -79,13 +79,13 @@ class Crossing:
                     next_cr = deepcopy(self.loc)
                     if direction == 'North':
                         # Increases y by 1
-                        next_cr[1] += 1
+                        next_cr[1] -= 1
                     elif direction == 'East':
                         # Increase x by 1
                         next_cr[0] += 1
                     elif direction == 'South':
                         # Decrease y by 1
-                        next_cr[1] -= 1
+                        next_cr[1] += 1
                     elif direction == 'West':
                         # Decrease x by 1
                         next_cr[0] -= 1
