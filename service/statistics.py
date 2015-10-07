@@ -27,9 +27,9 @@ class Statistics:
                 self.stats[3] += 1
 
         # Calculate ratio of agent going
-        self.go_ratio = float(self.stats[0] / (self.stats[0] + self.stats[1]))
+        self.stats[4] = float(self.stats[0] / (self.stats[0] + self.stats[1]))
         # Calculate ratio of agent waiting
-        self.wait_ratio = float(self.stats[2] / (self.stats[2] + self.stats[3]))
+        self.stats[5] = float(self.stats[2] / (self.stats[2] + self.stats[3]))
 
         # Return list of statistics
         return self.stats

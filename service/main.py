@@ -4,6 +4,7 @@ import osc  # from kivy.lib import osc
 import traceback
 from time import sleep
 from model import Model
+from statistics import Statistics
 
 __author__ = 'tom, stef, pieter'
 
@@ -56,6 +57,9 @@ class osc_message:
         self.max_cycles = self.sim.model.parameters.get('max_cycles')
         print("Max cycles: {}".format(self.max_cycles))
 
+        # Make statistics instance
+        self.statistics = Statistics()
+
         # Send server is running
         self.simulation_status_send()
 
@@ -75,7 +79,7 @@ class osc_message:
                     self.positions()
 
                     # Statistics stuff
-                    self.statistics()
+                    self.do_statistics()
 
                     # Hello world test
                     self.cycle += 1
@@ -99,8 +103,9 @@ class osc_message:
         osc.sendMsg('/states', ["end", ], port=3002)
 
     # Sends statistics
-    def statistics(self):
+    def do_statistics(self):
         print("Statistics")
+        print self.statistics.update(self.sim.model.drivers)
 
     # Change simulation status based on message from listener
     def startquit(self, can_start, *args):
