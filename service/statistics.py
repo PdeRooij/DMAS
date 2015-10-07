@@ -35,6 +35,10 @@ class Statistics:
         return self.stats
 
 
+    #def write_to_log(self, stats_list):
+
+
+
 """ to log:
 
 number of agents in the grid
