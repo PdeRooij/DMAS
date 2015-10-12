@@ -85,7 +85,7 @@ class Situation:
 
                     # Prepare for movement
                     self.move[direction] = driver
-                    driver = None   # Ensures the driver is not in hold anymore
+                    self.traffic[direction] = None   # Ensures the driver is not in hold anymore
 
             # Driver's decision is computed, remove from action list
             action = None

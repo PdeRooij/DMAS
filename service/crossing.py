@@ -78,16 +78,16 @@ class Crossing:
                     # Move this driver to next crossing
                     next_cr = deepcopy(self.loc)
                     if direction == 'North':
-                        # Decrease y by 1
+                        # Go up, so decrease y by 1
                         next_cr[1] -= 1
                     elif direction == 'East':
-                        # Increase x by 1
+                        # Go right, so increase x by 1
                         next_cr[0] += 1
                     elif direction == 'South':
-                        # Increase y by 1
+                        # Go down, so increase y by 1
                         next_cr[1] += 1
                     elif direction == 'West':
-                        # Decrease x by 1
+                        # Go left, so decrease x by 1
                         next_cr[0] -= 1
                     next_dr = self.dr[self.dr[direction]-2]     # Compute opposite direction (queue it will move into)
                     pieter_4_life.append((driver, next_cr, next_dr))
