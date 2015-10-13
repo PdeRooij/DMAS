@@ -66,14 +66,14 @@ class Situation:
                             other.status = 'crashed'
                             dummies.append(other)
                             actions[dr] = None
-                            other = None    # Remove from hold
+                            self.traffic[dr] = None     # Remove from hold
 
                 if collision:
                     # There was a collision, give this driver corresponding reward
                     driver.remember(rewards['crash'])
                     driver.status = 'crashed'
                     dummies.append(driver)
-                    driver = None   # Remove from hold
+                    self.traffic[direction] = None  # Remove from hold
                 else:
                     # No crash, good to go!
                     if driver.goal == cr_loc:
@@ -85,7 +85,7 @@ class Situation:
 
                     # Prepare for movement
                     self.move[direction] = driver
-                    driver = None   # Ensures the driver is not in hold anymore
+                    self.traffic[direction] = None  # Ensures the driver is not in hold anymore
 
             # Driver's decision is computed, remove from action list
             action = None
