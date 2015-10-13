@@ -17,6 +17,7 @@ class Memory:
 
     # Makes a new chunk and stores it in memory
     def store(self, traffic, act, r):
+        print "STORE CHUNK IN MEMORY\n"
         self.mem.put(Chunk(traffic, act, r))
 
     # Compare current condition (chunk?) to similar events

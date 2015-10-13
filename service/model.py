@@ -1,6 +1,7 @@
 from parameters import Parameters
 from crossing import Crossing
 from driver import Driver
+from statistics import Statistics
 
 __author__ = 'tom, stef, pieter'
 
@@ -21,6 +22,7 @@ class Model:
 
     # Resets the model to initial state
     def reset(self):
+        print ("ENTERED RESET MODEL\n")
         # Spawn crossings
         dim = self.parameters.get('grid_size')
         self.crossings = []     # Crossings in grid orientation
@@ -38,9 +40,12 @@ class Model:
         # Spawn drivers
         self.drivers = []
         n = self.parameters.get('n_drivers')
+        print ("DRIVERS SPAWNED\n")
         while n > 0:
             driver = Driver('driver' + str(n))
             self.drivers.append(driver)
+            #TODO remove print
+            print ("DRIVER ADDED TO LIST\n")
             # Put at a grid edge
             new_loc = driver.respawn(dim[0], dim[1])
             self.crossings[new_loc[1]][new_loc[0]].put_spawn(driver, dim[0]-1, dim[1]-1)

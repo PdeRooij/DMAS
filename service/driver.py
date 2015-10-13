@@ -36,6 +36,7 @@ class Driver:
         rand = Random()
         matches = self.mem.match(traffic)     # List of matching situations in memory
         if matches:
+            print ("IS IN MATCH\n")
             # At least one matching situation is found. Take best action from experience.
             utils = self.compute_utility(matches)
             self.act = 'go'
@@ -47,6 +48,7 @@ class Driver:
                     self.act = act
                     high = util
         else:
+            print ("NO MATCH\n")
             # No matching situations, randomly select action
             act = rand.randint(0, 1)
             if act == 0:
@@ -68,6 +70,8 @@ class Driver:
         if not (self.view and self.act):
             print 'WARNING!! This driver forgot what to remember!'
         self.mem.store(self.view, self.act, reward)
+        # TODO remove print
+        print self.mem.get()
         self.view = self.act = None     # Clear WM
 
     # Compute utilities of actions based on similar past situations
