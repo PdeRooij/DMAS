@@ -72,6 +72,8 @@ class GUIApp(App):
     rows = NumericProperty(2)
     columns = NumericProperty(2)
     grid = ReferenceListProperty(rows, columns)
+    # grid = ListProperty([2, 2])
+    sim_speed = NumericProperty(1.0)
 
     def __init__(self, **kwargs):
         super(GUIApp, self).__init__(**kwargs)
@@ -79,6 +81,9 @@ class GUIApp(App):
         # Grid changes
         self._size_handler_trigger = Clock.schedule_once(self._size_handler)  # Clock.create_trigger
         self.bind(grid=self._size_handler_trigger)
+
+        # Speed changes
+        self.bind(sim_speed = self._simuspeed)
 
 
     # Initialize grid and such
@@ -171,7 +176,10 @@ class GUIApp(App):
         self.cycle = message[3]
         self.root.ids.label.text += "Current cycle: {}\n".format(self.cycle)
         self.server_running = True
+        print("Grid received: {}x{}".format(message[4], message[5]))
         self.grid = [message[4], message[5]]
+        print("Grid after: {}x{}".format(self.grid[0], self.grid[1]))
+        self.sim_speed = round(message[6], 1)
 
     # Print out the received message "Hello world"... printed out :(   now it prints cycle status
     def output_hello(self, message, *args):
@@ -206,7 +214,7 @@ class GUIApp(App):
             self.grid_spots.append(message[2:7])
 
     def _size_handler(self, *largs):
-        print("Grid change")
+        print("Grid change: {}".format(self.grid))
         # Get number of crossings in grid
         crossing_obj = App.get_running_app().root.ids.gridy.children
         crossing_len = len(crossing_obj)
@@ -224,6 +232,9 @@ class GUIApp(App):
             App.get_running_app().root.ids.gridy.remove_widget(crossing_obj[0])
             crossing_len -= 1
 
+    def _simuspeed(self, *largs):
+        print("Speed change to: {}".format(self.sim_speed))
+        osc.sendMsg('/simu-speed', [self.sim_speed, ], port=3000)
 
 if __name__ == '__main__':
     # This is the GUI for the agent simulation

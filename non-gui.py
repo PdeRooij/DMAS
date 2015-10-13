@@ -27,9 +27,12 @@ class ClientServerApp():
         self.cycle = 0
         self.server_running = False
         self.start_simu = True
-        self.max_cycle = 10
+        self.max_cycle = -1
         self.agents_num = 10
         self.grid = [1, 1]
+        self.repeat = -1
+        self.max_repeat = 1
+        self.first_time = True
 
         # Read params from txt file
         self.params_txt()
@@ -52,6 +55,10 @@ class ClientServerApp():
         osc.sendMsg('/start', [False, ], port=3000)
         self.cycle = 0
         self.start_simu = True
+
+    def simuspeed(self, wait):
+        print("Wait change to: {}s".format(wait))
+        osc.sendMsg('/simu-speed', [wait, ], port=3000)
 
     # Read parameters from .txt file
     def params_txt(self):
@@ -77,20 +84,29 @@ class ClientServerApp():
         self.max_cycle = p[0]
         self.agents_num = p[1]
         self.grid = [p[2], p[3]]
+        self.max_repeat = p[4]
+        print("New params: mx:{}, an:{}, g:{}, mr:{}".format(self.max_cycle, self.agents_num,
+                                                             self.grid, self.max_repeat))
 
     # !!! Commands to server for statistics !!!
     def command_simulation(self):
         if self.server_running:
             # Reset server if simulation has started
+            print("start simu: {}".format(self.start_simu))
             if not self.start_simu:
                 self.stop_simulation()
                 self.start_simu = True
 
             print("Service is running!")
             # Still new params to send
-            if self.params:
-                # Set new params
-                self.set_params()
+            if self.params or self.repeat < self.max_repeat:
+                # Only set new params if max repeat is reached
+                if self.repeat == self.max_repeat or self.repeat == -1:
+                    # Set new params
+                    self.set_params()
+                    self.repeat = 0
+                else:
+                    self.repeat += 1
 
                 # Send next set of parameters for simulation if available
                 print("Commands incomming!")
@@ -99,6 +115,8 @@ class ClientServerApp():
             # All params have been send
             else:
                 print("All simulations succesfully ran :D")
+                # Set service slow so log can be read
+                self.simuspeed(10)
                 sys.exit()
 
         # Service is not running
@@ -108,14 +126,19 @@ class ClientServerApp():
 
     # Cycle status
     def output_cycle(self, message, *args):
-        print("Cycle: {}".format(message[2]))
-        self.cycle = message[2]
+        if self.server_running:
+            #print("Cycle: {}".format(message[2]))
+            self.cycle = message[2]
 
-        # Max cycles reached, rerun simulation with new params
-        if self.cycle >= self.max_cycle:
-            print("Max cycles reached, new simulation should be run!")
-            self.start_simu = False
-            self.command_simulation()
+            # Max cycles reached, rerun simulation with new params
+            if self.cycle >= self.max_cycle:
+                print("Max cycles reached: {}, repeat: {}/{}".format(self.max_cycle,
+                                                                     self.repeat, self.max_repeat))
+                if self.repeat == self.max_repeat:
+                    print("\n\nNew simulation with new params should be run!")
+
+                self.start_simu = False
+                self.command_simulation()
 
     #   Receive status from Service
     # Receive whether the service and/or simulation is running
@@ -125,6 +148,14 @@ class ClientServerApp():
         self.cycle = message[3]
         self.server_running = True
         self.grid = [message[4], message[5]]
+
+        # sleep 1 sec so service can get ready if just started
+        if self.cycle == 0 and self.first_time == True:
+            sleep(1)
+            self.first_time = False
+
+        # Set simulation wait to sleep(0)
+        self.simuspeed(0)
 
         # Run the simulation for results
         self.command_simulation()

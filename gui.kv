@@ -112,15 +112,16 @@ BoxLayout:
             Label:
                 size_hint_x: 1.25
                 text: "Cycle: {}".format(app.cycle)
-                font_size: self.height * .6
+                font_size: self.height * .5
 
             TextInput:
                 size_hint_x: 0.75
+                size_hint_y: 0.9
                 text: str(int(app.max_cycle))
                 multiline: False
                 disabled: True if app.cycle != 0 else False
                 padding: [3, 1]
-                font_size: self.height * .7
+                font_size: self.height * .6
 
         Slider:
             size_hint_y: 0.08
@@ -131,32 +132,72 @@ BoxLayout:
             value: app.max_cycle
             on_value: app.max_cycle = self.value
 
-        # Agent settings
+        # Wait and agent
         BoxLayout:
-            size_hint_y: 0.08
+            size_hint_y: 0.14
             orientation: 'horizontal'
 
-            Label:
-                size_hint_x: 1.25
-                text: "Agents:"
-                font_size: self.height * .6
+            # Wait settings
+            BoxLayout:
+                orientation: 'vertical'
+                padding: '6dp', '6dp'
+                spacing: '10dp'
 
-            TextInput:
-                size_hint_x: 0.75
-                text: str(int(app.agents_num))
-                multiline: False
-                disabled: True if app.cycle != 0 else False
-                padding: [3, 1]
-                font_size: self.height * .7
+                BoxLayout:
+                    orientation: 'horizontal'
 
-        Slider:
-            size_hint_y: 0.08
-            disabled: True if app.cycle != 0 else False
-            min: 2
-            max: 20
-            step: 1
-            value: app.agents_num
-            on_value: app.agents_num = self.value
+                    Label:
+                        size_hint_x: 1.25
+                        text: "Wait:"
+                        font_size: self.height * .5
+
+                    TextInput:
+                        size_hint_x: 0.75
+                        size_hint_y: 0.9
+                        text: str(app.sim_speed)
+                        multiline: False
+                        padding: [3, 1]
+                        font_size: self.height * .6
+
+                Slider:
+                    size_hint_y: 0.5
+                    min: 0.1
+                    max: 2
+                    step: .1
+                    value: app.sim_speed
+                    on_value: app.sim_speed = self.value
+
+            # Agent settings
+            BoxLayout:
+                orientation: 'vertical'
+                padding: '6dp', '6dp'
+                spacing: '10dp'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+
+                    Label:
+                        size_hint_x: 1.25
+                        text: "Agents:"
+                        font_size: self.height * .5
+
+                    TextInput:
+                        size_hint_x: 0.75
+                        size_hint_y: 0.9
+                        text: str(int(app.agents_num))
+                        multiline: False
+                        disabled: True if app.cycle != 0 else False
+                        padding: [3, 1]
+                        font_size: self.height * .6
+
+                Slider:
+                    size_hint_y: 0.5
+                    disabled: True if app.cycle != 0 else False
+                    min: 2
+                    max: 20
+                    step: 1
+                    value: app.agents_num
+                    on_value: app.agents_num = self.value
 
         # Grid settings
         BoxLayout:
@@ -166,28 +207,30 @@ BoxLayout:
             Label:
                 size_hint_x: 1.25
                 text: "Grid:"
-                font_size: self.height * .6
+                font_size: self.height * .5
 
             TextInput:
                 size_hint_x: 0.30
+                size_hint_y: 0.9
                 text: str(int(app.grid[0]))
                 multiline: False
                 disabled: True if app.cycle != 0 else False
                 padding: [3, 1]
-                font_size: self.height * .7
+                font_size: self.height * .6
 
             Label:
                 size_hint_x: 0.15
                 text: "x"
-                font_size: self.height * .6
+                font_size: self.height * .5
 
             TextInput:
                 size_hint_x: 0.30
+                size_hint_y: 0.9
                 text: str(int(app.grid[1]))
                 multiline: False
                 disabled: True if app.cycle != 0 else False
                 padding: [3, 1]
-                font_size: self.height * .7
+                font_size: self.height * .6
 
         Slider:
             size_hint_y: 0.08
@@ -197,6 +240,7 @@ BoxLayout:
             step: 1
             value: app.grid[0] + app.grid[1]
             on_value: app.grid = [self.value / 2 + ((self.value/2)-int(self.value/2)), self.value / 2 - ((self.value/2)-int(self.value/2))]
+            #on_value: app.grid = [app.grid[0], app.grid[1]]
 
         # Statistics
 #        Label:

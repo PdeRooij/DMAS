@@ -49,9 +49,13 @@ class osc_message:
         osc.bind(oscid, self.send_hello, '/hello')
         # Send status of simulation
         osc.bind(oscid, self.simulation_status_send, '/simu-status_ask')
+        # Receive simulation speed
+        osc.bind(oscid, self.simuspeed, '/simu-speed')
+
 
         # Init actual model
         self.sim = Simulation()
+        self.sim_speed = 1
         self.cycle = 0
         self.max_cycles = self.sim.model.parameters.get('max_cycles')
         print("Max cycles: {}".format(self.max_cycles))
@@ -85,7 +89,7 @@ class osc_message:
                     self.cycle += 1
                     self.send_hello()
 
-                sleep(1)
+                sleep(self.sim_speed)
 
             # Send message server stopped
             except:
@@ -125,13 +129,17 @@ class osc_message:
             print("\n    Simulation paused    ")
             self.can_start = False
 
+    # Change simulation wait based on message from listener
+    def simuspeed(self, speed, *args):
+        self.sim_speed = speed[2]
+
     # Informs the listener whether the simulation is running or not
     def simulation_status_send(self, *args):
         print("Send simulation status")
         msg = []
         grid_size = self.sim.model.parameters.get('grid_size')
         print(grid_size)
-        osc.sendMsg('/simu-status', [self.can_start, self.cycle, grid_size[0], grid_size[1]], port=3002)
+        osc.sendMsg('/simu-status', [self.can_start, self.cycle, grid_size[0], grid_size[1], self.sim_speed], port=3002)
         # Send agent positions
         sleep(0.5)
         if self.cycle > 0:
