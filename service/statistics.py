@@ -2,33 +2,40 @@ __author__ = 'tom, stef, pieter'
 
 class Statistics:
 
-    def __init__(self):
-        self.drivers = []
-        # [left_go, right_go, left_wait, right_wait, left_go_ratio, right_go_ratio
-        # left_wait_ratio, right_wait_ratio]
-        self.stats = [0] * 8
-
-
-    def update(self, driver_list):
-        # Copy list of drivers
+    def __init__(self, driver_list):
         self.drivers = driver_list
-        # Reset values to 0 TODO change to 0 when debugged
-        self.stats = [1] * 8
+        self.stats = {
+            'left_go': 0,
+            'right_go': 0,
+            'left_wait': 0,
+            'right_wait': 0,
+            'go_ratio': 0,
+            'wait_ratio': 0
+        }
+
+    def update(self):
+        # Reset values
+        for key in self.stats:
+            self.stats[key] = 0
+
         # Iterate over list of drivers and do statistics
         for driver in self.drivers:
+            # TODO this has to change: utilize memory instead of working memory
             # Check if driver gave way to the left or did not
-            # Check if view == [1, 0, 0]
+            if driver.view == [1, 0, 0]:
+                # Situation in which there was a driver from the left
+                if driver.act == 'go':
+                    self.stats[0] += 1
+                elif driver.act == 'wait':
+                    self.stats[2] += 1
 
-            if driver.view[0] == 1 and driver.view[2] == 0 and driver.act == 'go':
-                self.stats[0] += 1
-            elif driver.view[0] == 1 and driver.view[2] == 0 and driver.act == 'wait':
-                self.stats[2] += 1
             # Check if driver gave way to the right or did not
-            # Check if view == [0, 0, 1]
-            elif driver.view[0] == 0 and driver.view[2] == 1 and driver.act == 'go':
-                self.stats[1] += 1
-            elif driver.view[0] == 1 and driver.view[2] == 0 and driver.act == 'wait':
-                self.stats[3] += 1
+            elif driver.view == [0, 0,  1]:
+                # Situation in which there was a driver from the right
+                if driver.act == 'go':
+                    self.stats[1] += 1
+                elif driver.act == 'wait':
+                    self.stats[3] += 1
 
         # Calculate ratio of agents going when agent coming from the left
         self.stats[4] = self.stats[0] / float(self.stats[0] + self.stats[1])

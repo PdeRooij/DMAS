@@ -58,7 +58,7 @@ class osc_message:
         print("Max cycles: {}".format(self.max_cycles))
 
         # Make statistics instance
-        self.statistics = Statistics()
+        self.statistics = Statistics(self.sim.model.drivers)
 
         # Send server is running
         self.simulation_status_send()
