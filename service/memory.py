@@ -1,5 +1,3 @@
-from Queue import Queue
-
 __author__ = 'tom, stef, pieter'
 
 """
@@ -10,15 +8,16 @@ Both a queue representing an agent's memory as well as chunks are implemented he
 
 # Class for memories
 class Memory:
-    # Make a new, empty memory queue of (standard) length 10.
+    # Make a new, empty memory of (standard) length 10.
     def __init__(self, length=10):
-        self.mem = Queue()
+        # Memory is a stack (list in Python)
+        self.mem = []
         self.length = length
 
     # Makes a new chunk and stores it in memory
     def store(self, traffic, act, r):
         print "STORE CHUNK IN MEMORY\n"
-        self.mem.put(Chunk(traffic, act, r))
+        self.mem.append(Chunk(traffic, act, r))
 
     # Compare current condition (chunk?) to similar events
     def match(self, chunk):
@@ -26,7 +25,7 @@ class Memory:
             # There are past memories
             same = []  # List for similar memories
             # Consider all memories
-            for m in self.mem.queue:
+            for m in self.mem:
                 if m == chunk:
                     # Similar situation found, add to list
                     same.append(m)
@@ -36,6 +35,22 @@ class Memory:
             # No experiences yet, so no matches.
             return []
 
+    # This method gets the latest unique situations and returns those
+    def last_act(self):
+        # Make lists of unique situations and latest memory of it
+        uniq_sit = []
+        actions = []
+
+        # Loop over memories in reverse order (recency) and get latest unique situations
+        for idx in range(len(self.mem)):
+            m = self.mem[-idx]
+            if not uniq_sit.__contains__(m.traffic):
+                # New unique situation encountered, add to lists
+                uniq_sit.append(m.traffic)
+                actions.append(m)
+
+        # Return latest action for every unique situation
+        return actions
 
 # Represents one specific memory
 class Chunk:
