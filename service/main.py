@@ -88,7 +88,7 @@ class osc_message:
 
                      # Make statistics instance
                     # print "LIST PRINTED in LOOP\n"
-                    # self.statistics.driver_update(self.sim.model.drivers)
+                    self.statistics.driver_update(self.sim.model.drivers)
                     # print(self.statistics)
 
 
@@ -125,7 +125,7 @@ class osc_message:
     # Sends statistics
     def do_statistics(self):
         print("Statistics")
-        #self.statistics.update()
+        self.statistics.update()
         self.statistics.write_to_log()
 
     # Change simulation status based on message from listener

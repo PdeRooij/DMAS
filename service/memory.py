@@ -16,11 +16,12 @@ class Memory:
 
     # Makes a new chunk and stores it in memory
     def store(self, traffic, act, r):
-        print "STORE CHUNK IN MEMORY\n"
+        # print "STORE CHUNK IN MEMORY\n"
         self.mem.append(Chunk(traffic, act, r))
 
     # Compare current condition (chunk?) to similar events
-    def match(self, chunk):
+    def match(self, traffic):
+        chunk = Chunk(traffic, 'dummy', 0)
         if self.mem:
             # There are past memories
             same = []  # List for similar memories
