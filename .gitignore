@@ -63,3 +63,6 @@ bin/
 
 # Pycharm
 .idea
+
+# Own code
+statistics/
