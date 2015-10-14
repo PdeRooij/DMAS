@@ -1,7 +1,7 @@
 __author__ = 'tom, stef, pieter'
 
 from os import makedirs
-from os.path import join, isdir
+from os.path import join, isdir, isfile
 from glob import glob
 import csv
 
@@ -22,6 +22,7 @@ class Statistics:
             'right_wait_ratio': 0.0
         }
         self.csv_file = ''
+        self.csv_exist = True
 
     def driver_update(self, driver_list):
         self.drivers = driver_list
@@ -107,20 +108,21 @@ class Statistics:
     def write_to_log(self):
         # Check if csv filename is initialiased
         if self.csv_file:
+            # Headers need to be added if file is created
+            if not isfile(self.csv_file):
+                self.csv_exist = False
+
+            fieldnames = self.stats.keys()
             print("CSV file used: {}".format(self.csv_file))
-            with open(self.csv_file, 'wb') as csvfile:
-                csv_stats = csv.writer(csvfile)
-                csv_stats.writerow([0, 1, 0, 3, 2])
+            with open(self.csv_file, 'a') as csvfile:
+                csv_stats = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                # Write header to file first time
+                if self.csv_exist == False:
+                    csv_stats.writeheader()
+                    self.csv_exist = True
+
+                # Add values from dict as new row
+                csv_stats.writerow(self.stats)
         else:
             print("No CSV file to write to 0.o")
-
-
-
-
-
-
-
-
-
-
-
