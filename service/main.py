@@ -6,8 +6,6 @@ import traceback
 from time import sleep
 from model import Model
 from statistics import Statistics
-from os.path import dirname, join
-import csv
 
 __author__ = 'tom, stef, pieter'
 
@@ -83,8 +81,11 @@ class osc_message:
                 if self.can_start == True and self.cycle < self.max_cycles:
                     # Reset model
                     if self.cycle == 0:
+                        print("\nNew simulation detected!!!\n")
+                        print("\nReset model")
                         self.sim.model.reset()
-                        self.statistics.create_csv()
+                        print("\nCSV filename function")
+                        self.statistics.create_csv(self.sim.model.parameters.param)
 
                      # Make statistics instance
                     # print "LIST PRINTED in LOOP\n"
