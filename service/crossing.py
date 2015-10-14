@@ -27,6 +27,14 @@ class Crossing:
         # And finally a slot for end-points of an animation
         self.next = {}.fromkeys(self.dr.directions)
         self.next['crash'] = None   # Also add a point in the middle indicating crash
+        # Make a log for crossing with its statistics
+        self.log = {'crash' : 0,
+                    'wait' : 0,
+                    'go' : 0,
+                    'agents' : 0,      # Current number of agents at crossing
+                    'pas_agents' : 0   # Number of agents passed through the crossing
+                    }
+
 
     # Take next in queues, generate traffic situation
     def resolve(self):

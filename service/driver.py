@@ -20,6 +20,11 @@ class Driver:
         self.goal = [0, 0]      # Where the driver is headed to
         self.heading = [0, 1, 0]    # Heading at the moment (always ahead as of yet)
         self.status = 'spawning'    # Status (driving, queued, etc.)
+        self.log = {'crash' : 0,    # Driver's log containing stats
+                    'go' : 0,
+                    'wait' : 0,
+                    'last_action' : 'none'
+                    }
 
     # Decide what to do in given situation
     def decide(self, traffic):
@@ -31,6 +36,7 @@ class Driver:
         rand = Random()
         matches = self.mem.match(traffic)     # List of matching situations in memory
         if matches:
+            print ("IS IN MATCH\n")
             # At least one matching situation is found. Take best action from experience.
             utils = self.compute_utility(matches)
             self.act = 'go'
@@ -42,6 +48,7 @@ class Driver:
                     self.act = act
                     high = util
         else:
+            print ("NO MATCH\n")
             # No matching situations, randomly select action
             act = rand.randint(0, 1)
             if act == 0:
@@ -51,6 +58,9 @@ class Driver:
                 self.act = 'go'
                 self.status = 'driving'
 
+        # Add action to the log
+        self.log['last_action'] = self.act
+        self.log[self.act] += 1
         # Finally return the decision
         return self.act
 
