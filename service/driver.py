@@ -69,7 +69,7 @@ class Driver:
         # Again a check because this method might be prone to error
         if not (self.view and self.act):
             print 'WARNING!! This driver forgot what to remember!'
-        self.mem.store(self.view, self.act, reward)        
+        self.mem.store(self.view, self.act, reward)
         self.view = self.act = None     # Clear WM
 
     # Compute utilities of actions based on similar past situations
