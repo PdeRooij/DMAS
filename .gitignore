@@ -60,3 +60,6 @@ target/
 *~
 .buildozer/
 bin/
+
+# Pycharm
+.idea

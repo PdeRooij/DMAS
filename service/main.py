@@ -1,10 +1,13 @@
 #!usr/bin/python
+
 from sys import exit
 import osc  # from kivy.lib import osc
 import traceback
 from time import sleep
 from model import Model
 from statistics import Statistics
+from os.path import dirname, join
+import csv
 
 __author__ = 'tom, stef, pieter'
 
@@ -62,10 +65,9 @@ class osc_message:
         print("Max cycles: {}".format(self.max_cycles))
 
 
-        # # Make statistics instance
-        print "LIST PRINTED\n"
-        print self.sim.model.drivers
-        self.statistics = Statistics(self.sim.model.drivers)
+        # Make statistics instance
+        # Only for testing writing to CSV
+        self.statistics = Statistics()
 
         # Send server is running
         self.simulation_status_send()
@@ -82,10 +84,11 @@ class osc_message:
                     # Reset model
                     if self.cycle == 0:
                         self.sim.model.reset()
+                        self.statistics.create_csv()
 
                      # Make statistics instance
                     # print "LIST PRINTED in LOOP\n"
-                    # self.statistics = Statistics(self.sim.model.drivers)
+                    # self.statistics.driver_update(self.sim.model.drivers)
                     # print(self.statistics)
 
 
@@ -95,7 +98,7 @@ class osc_message:
                     # Send agent positions
                     self.positions()
 
-                    # # Statistics stuff
+                    # Statistics stuff
                     self.do_statistics()
 
                     # Hello world test
@@ -122,7 +125,8 @@ class osc_message:
     # Sends statistics
     def do_statistics(self):
         print("Statistics")
-        print self.statistics.update()
+        #self.statistics.update()
+        self.statistics.write_to_log()
 
     # Change simulation status based on message from listener
     def startquit(self, can_start, *args):

@@ -3,8 +3,7 @@ __author__ = 'tom, stef, pieter'
 
 class Statistics:
 
-    def __init__(self, driver_list):
-        self.drivers = driver_list
+    def __init__(self):
         self.stats = {
             'left_go': 0,
             'right_go': 0,
@@ -17,6 +16,10 @@ class Statistics:
             'left_wait_ratio' : 0,
             'right_wait_ratio' : 0
         }
+        self.csv_file = ''
+
+    def driver_update(self, driver_list):
+        self.drivers = driver_list
 
     def update(self):
         # Reset values
@@ -70,13 +73,11 @@ class Statistics:
         # Return dict of statistics
         return self.stats
 
+    def create_csv(self):
+        pass
 
-
-    # def write_to_log(self, stats_list):
-    #
-    #     log_file = open("simlog{}.csv", "w")
-    #     log_file.write(stats_list ))
-    #     log_file.close()
+    def write_to_log(self):
+        pass
 
 
 
