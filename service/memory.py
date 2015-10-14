@@ -42,8 +42,7 @@ class Memory:
         actions = []
 
         # Loop over memories in reverse order (recency) and get latest unique situations
-        for idx in range(len(self.mem)):
-            m = self.mem[-idx]
+        for m in reversed(self.mem):
             if not uniq_sit.__contains__(m.traffic):
                 # New unique situation encountered, add to lists
                 uniq_sit.append(m.traffic)

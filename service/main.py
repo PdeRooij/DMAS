@@ -63,9 +63,9 @@ class osc_message:
 
 
         # # Make statistics instance
-        # print "LIST PRINTED\n"
-        # print self.sim.model.drivers
-        # self.statistics = Statistics(self.sim.model.drivers)
+        print "LIST PRINTED\n"
+        print self.sim.model.drivers
+        self.statistics = Statistics(self.sim.model.drivers)
 
         # Send server is running
         self.simulation_status_send()
@@ -96,7 +96,7 @@ class osc_message:
                     self.positions()
 
                     # # Statistics stuff
-                    # self.do_statistics()
+                    self.do_statistics()
 
                     # Hello world test
                     self.cycle += 1
