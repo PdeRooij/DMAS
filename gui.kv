@@ -134,7 +134,7 @@ BoxLayout:
 
         # Wait and agent
         BoxLayout:
-            size_hint_y: 0.14
+            size_hint_y: 0.20
             orientation: 'horizontal'
 
             # Wait settings
@@ -160,7 +160,7 @@ BoxLayout:
                         font_size: self.height * .6
 
                 Slider:
-                    size_hint_y: 0.5
+                    #size_hint_y: 0.7
                     min: 0.1
                     max: 2
                     step: .1
@@ -191,7 +191,7 @@ BoxLayout:
                         font_size: self.height * .6
 
                 Slider:
-                    size_hint_y: 0.5
+                    #size_hint_y: 0.7
                     disabled: True if app.cycle != 0 else False
                     min: 2
                     max: 20
@@ -256,7 +256,7 @@ BoxLayout:
 
         # Print simulation status
         ScrollView:
-            size_hint_y: 0.40
+            size_hint_y: 0.30
             # White background
             canvas.before:
                 Color:

@@ -5,7 +5,7 @@ import osc  # from kivy.lib import osc
 import traceback
 from time import sleep
 from model import Model
-from statistics import Statistics
+#from statistics import Statistics
 
 __author__ = 'tom, stef, pieter'
 
@@ -65,7 +65,7 @@ class osc_message:
 
         # Make statistics instance
         # Only for testing writing to CSV
-        self.statistics = Statistics()
+        #self.statistics = Statistics()
 
         # Send server is running
         self.simulation_status_send()
@@ -85,11 +85,11 @@ class osc_message:
                         print("\nReset model")
                         self.sim.model.reset()
                         print("\nCSV filename function")
-                        self.statistics.create_csv(self.sim.model.parameters.param)
+                        #self.statistics.create_csv(self.sim.model.parameters.param)
 
                      # Make statistics instance
                     # print "LIST PRINTED in LOOP\n"
-                    self.statistics.driver_update(self.sim.model.drivers)
+                    #self.statistics.driver_update(self.sim.model.drivers)
                     # print(self.statistics)
 
 
@@ -100,7 +100,7 @@ class osc_message:
                     self.positions()
 
                     # Statistics stuff
-                    self.do_statistics()
+                    #self.do_statistics()
 
                     # Hello world test
                     self.cycle += 1
