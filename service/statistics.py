@@ -100,7 +100,7 @@ class Statistics:
             if int(self.csv_file[-9:-4]) > max:
                 max = int(self.csv_file[-9:-4])
 
-        max = str(max).zfill(5)
+        max = str(max+1).zfill(5)
         self.csv_file = self.csv_file[:-9] + max + '.csv'
         print("New CSV file: {}\n".format(self.csv_file))
 
