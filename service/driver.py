@@ -36,20 +36,21 @@ class Driver:
         rand = Random()
         matches = self.mem.match(traffic)     # List of matching situations in memory
         if matches:
-            print ("IS IN MATCH\n")
+            # print ("IS IN MATCH\n")
             # At least one matching situation is found. Take best action from experience.
             utils = self.compute_utility(matches)
-            self.act = 'go'
+            self.act = ['go', 'wait'][rand.randint(0, 1)]   # Select random action
             high = -1000000
             for act, util in utils.iteritems():
-                if util > high and util - high > rand.randint(1, 5):
-                    # NOISE VALUES STILL NEED TO BE DETERMINED
-                    # Check utility is the highest and the difference is large enough, random noise added
+                diff = util - high
+                if diff > 0 and rand.randint(0, diff) > diff / 20:
+                    # Check utility is the highest and if the difference is large enough,
+                    # random noise added
                     self.act = act
                     high = util
         else:
-            print ("NO MATCH\n")
-            # No matching situations, randomly select action
+            # print ("NO MATCH\n")
+            # No matching situation or , randomly select action
             act = rand.randint(0, 1)
             if act == 0:
                 self.act = 'wait'   # Also store in WM
@@ -76,11 +77,22 @@ class Driver:
     @staticmethod
     def compute_utility(memories):
         util = {'go': 0, 'wait': 0}     # Dictionary with utilities of each action, start at 0
+        occ = {'go': 0, 'wait': 0}      # Dictionary with occurrences of each action
+
         # Consider every memory
         for m in memories:
             # Add the outcome of a memory to the action taken
             util[m.action] += m.reward
-        # Return the utilities of each action
+            occ[m.action] += 1  # Increment times this action is chosen
+
+        # Normalize utilities
+        for act, n in occ.iteritems():
+            # Divide utility of this action by number of times it was chosen
+            if n > 0:
+                # Only do division if there is a positive integer here
+                util[act] /= n
+
+        # Return the normalized utilities of each action
         return util
 
     # Initiates a respawn cycle. Takes dimensions of grid (x,y) and returns spawn point.
