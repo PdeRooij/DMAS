@@ -1,6 +1,6 @@
 __author__ = 'tom, stef, pieter'
 
-from os import makedirs
+from os import makedirs, getcwd
 from os.path import join, isdir, isfile
 from glob import glob
 import csv
@@ -88,20 +88,24 @@ class Statistics:
             makedirs('statistics')
 
         # n_driver, clear, crash, wait, destination, gridx x gridy
-        self.csv_file = join('statistics','n{}_cl{}_cr{}_w{}_d{}_{}x{}_00000.csv'.format(
+        self.csv_file = 'n{}_cl{}_cr{}_w{}_d{}_{}x{}_00000.csv'.format(
             p['n_drivers'], r['clear'], r['crash'], r['wait'], r['destination'],
             p['grid_size'][0], p['grid_size'][1]
-        ))
+        )
 
         # Get latest number of existing .csv files
-        max = 0
-        for file in glob(join('statistics', self.csv_file[:-9])):
+        max = -1
+        print(getcwd())
+        print(self.csv_file[:-9])
+        for file in glob(join('statistics', self.csv_file[:-9]+'*')):  # join('statistics', self.csv_file[:-9])
             print(file)
-            if int(self.csv_file[-9:-4]) > max:
-                max = int(self.csv_file[-9:-4])
+            print(int(file[-9:-4]))
+            if int(file[-9:-4]) > max:
+                max = int(file[-9:-4])
 
-        max = str(max+1).zfill(5)
-        self.csv_file = self.csv_file[:-9] + max + '.csv'
+        max += 1
+        max = str(max).zfill(5)
+        self.csv_file = join('statistics', self.csv_file[:-9] + max + '.csv')
         print("New CSV file: {}\n".format(self.csv_file))
 
     # Write statistics to .csv
