@@ -121,7 +121,7 @@ class Statistics:
             if not isfile(self.csv_file):
                 self.csv_exist = False
 
-            fieldnames = self.ratios.keys()
+            fieldnames = self.stats.keys()
             print("CSV file used: {}".format(self.csv_file))
             with open(self.csv_file, 'a') as csvfile:
                 csv_stats = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -132,6 +132,6 @@ class Statistics:
                     self.csv_exist = True
 
                 # Add values from dict as new row
-                csv_stats.writerow(self.ratios)
+                csv_stats.writerow(self.stats)
         else:
             print("No CSV file to write to 0.o")
