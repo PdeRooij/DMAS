@@ -57,21 +57,21 @@ class Statistics:
                     elif m.action == 'wait':
                         self.stats['right_wait'] += 1
 
-        print ("I PASSED FOR LOOP\n")
+        # print ("I PASSED FOR LOOP\n")
 
         if self.stats['left_go'] or self.stats['right_go']:
             # Calculate ratio of agents going when agent coming from the left
-            self.stats['left_go_ratio'] = self.stats['left_go'] / (self.stats['left_go'] + self.stats['right_go'])
+            self.stats['left_go_ratio'] = self.stats['left_go'] / len(self.drivers) * 100
 
              # Calculate ratio of agents going when agent coming from the right
-            self.stats['right_go_ratio'] = self.stats['right_go'] / (self.stats['left_go'] + self.stats['right_go'])
+            self.stats['right_go_ratio'] = self.stats['right_go'] / len(self.drivers) * 100
 
         if self.stats['left_wait'] or self.stats['right_wait']:
             # Calculate ratio of agents waiting when agent coming from the left
-            self.stats['left_wait_ratio'] = self.stats['left_wait'] / (self.stats['left_wait'] + self.stats['right_wait'])
+            self.stats['left_wait_ratio'] = self.stats['left_wait'] / len(self.drivers) * 100
 
             # Calculate ratio of agents waiting when agent coming from the right
-            self.stats['right_wait_ratio'] = self.stats['right_wait'] / (self.stats['left_wait'] + self.stats['right_wait'])
+            self.stats['right_wait_ratio'] = self.stats['right_wait'] / len(self.drivers) * 100
 
         # print("\n")
         # print ("STATS!!!!!!\n")
