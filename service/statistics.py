@@ -84,7 +84,7 @@ class Statistics:
         # Return dict of statistics
         self.stats = self.counts.copy()
         self.stats.update(self.ratios)
-        #self.stats['crashes'] = self.crashes
+        self.stats['crashes'] = self.crashes
         return self.stats
 
     # Get filename of not yet existing .csv name
