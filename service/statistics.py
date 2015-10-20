@@ -33,7 +33,7 @@ class Statistics:
             self.stats[key] = 0.0
 
         # Iterate over list of drivers and do statistics
-        print self.drivers
+        #print self.drivers
         for driver in self.drivers:
             # Check if driver gave way to the left or did not
             # print ("\n")
@@ -57,7 +57,7 @@ class Statistics:
                     elif m.action == 'wait':
                         self.stats['right_wait'] += 1
 
-        print ("I PASSED FOR LOOP\n")
+        #print ("I PASSED FOR LOOP\n")
 
         if self.stats['left_go'] or self.stats['right_go']:
             # Calculate ratio of agents going when agent coming from the left
@@ -95,11 +95,11 @@ class Statistics:
 
         # Get latest number of existing .csv files
         max = -1
-        print(getcwd())
-        print(self.csv_file[:-9])
+        #print(getcwd())
+        #print(self.csv_file[:-9])
         for file in glob(join('statistics', self.csv_file[:-9]+'*')):  # join('statistics', self.csv_file[:-9])
-            print(file)
-            print(int(file[-9:-4]))
+            #print(file)
+            #print(int(file[-9:-4]))
             if int(file[-9:-4]) > max:
                 max = int(file[-9:-4])
 
@@ -117,7 +117,7 @@ class Statistics:
                 self.csv_exist = False
 
             fieldnames = self.stats.keys()
-            print("CSV file used: {}".format(self.csv_file))
+            #print("CSV file used: {}".format(self.csv_file))
             with open(self.csv_file, 'a') as csvfile:
                 csv_stats = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

@@ -74,7 +74,8 @@ class osc_message:
         while True:
             # Try so that a server stopped message can be send
             try:
-                print("Current cycle: {}".format(self.cycle))
+                if self.cycle % 1000 == 0 or self.cycle == 0:
+                    print("Current cycle: {}".format(self.cycle))
                 osc.readQueue(oscid)
                 # Only run simulation when started and max cycles not reached
                 #print("Start: {}, Max Cycles: {}".format(self.can_start, self.max_cycles))
@@ -84,7 +85,7 @@ class osc_message:
                         print("\nNew simulation detected!!!\n")
                         print("\nReset model")
                         self.sim.model.reset()
-                        print("\nCSV filename function")
+                        #print("\nCSV filename function")
                         self.statistics.create_csv(self.sim.model.parameters.param)
 
                      # Make statistics instance
@@ -116,8 +117,8 @@ class osc_message:
 
     # Sends a message per grid with agent information
     def positions(self):
-        print("Positions sending")
-        print(self.sim.state)
+        #print("Positions sending")
+        #print(self.sim.state)
         osc.sendMsg('/states', ["start", ], port=3002)
         for lst in self.sim.state:
              osc.sendMsg('/states', [lst[0], lst[1], lst[2], lst[3], lst[4]], port=3002)
@@ -125,7 +126,7 @@ class osc_message:
 
     # Sends statistics
     def do_statistics(self):
-        print("Statistics")
+        #print("Statistics")
         self.statistics.update()
         self.statistics.write_to_log()
 
