@@ -85,14 +85,12 @@ class osc_message:
                         print("\nNew simulation detected!!!\n")
                         print("\nReset model")
                         self.sim.model.reset()
+                        self.statistics.driver_update(self.sim.model.drivers)
                         #print("\nCSV filename function")
                         self.statistics.create_csv(self.sim.model.parameters.param)
 
                      # Make statistics instance
                     # print "LIST PRINTED in LOOP\n"
-                    self.statistics.driver_update(self.sim.model.drivers)
-                    # print(self.statistics)
-
 
                     # Agent stuff
                     self.sim.run()

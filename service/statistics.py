@@ -1,19 +1,20 @@
-__author__ = 'tom, stef, pieter'
-
 from os import makedirs, getcwd
 from os.path import join, isdir, isfile
 from glob import glob
 import csv
 
-class Statistics:
+__author__ = 'tom, stef, pieter'
 
+
+class Statistics:
     def __init__(self):
         self.drivers = []
-        self.stats = {
-            'left_go': 0.0,
-            'right_go': 0.0,
-            'left_wait': 0.0,
-            'right_wait': 0.0,
+        self.counts = {'left_go': 0,
+                       'right_go': 0,
+                       'left_wait': 0,
+                       'right_wait': 0
+                       }
+        self.ratios = {
             'go_ratio': 0.0,
             'wait_ratio': 0.0,
             'left_go_ratio': 0.0,
@@ -21,6 +22,8 @@ class Statistics:
             'left_wait_ratio': 0.0,
             'right_wait_ratio': 0.0
         }
+        self.stats = self.counts.copy()
+        self.stats.update(self.ratios)
         self.csv_file = ''
         self.csv_exist = True
 
@@ -29,8 +32,8 @@ class Statistics:
 
     def update(self):
         # Reset values
-        for key in self.stats:
-            self.stats[key] = 0.0
+        for key in self.counts:
+            self.counts[key] = 0
 
         # Iterate over list of drivers and do statistics
         #print self.drivers
@@ -45,38 +48,40 @@ class Statistics:
                 if m.traffic == [1, None, None]:
                     # Situation in which there was a driver from the left
                     if m.action == 'go':
-                        self.stats['left_go'] += 1
+                        self.counts['left_go'] += 1
                     elif m.action == 'wait':
-                        self.stats['left_wait'] += 1
+                        self.counts['left_wait'] += 1
 
                 # Check if driver gave way to the right or did not
-                elif m.traffic == [None, None,  1]:
+                elif m.traffic == [None, None, 1]:
                     # Situation in which there was a driver from the right
                     if m.action == 'go':
-                        self.stats['right_go'] += 1
+                        self.counts['right_go'] += 1
                     elif m.action == 'wait':
-                        self.stats['right_wait'] += 1
+                        self.counts['right_wait'] += 1
 
-        #print ("I PASSED FOR LOOP\n")
+        # print ("I PASSED FOR LOOP\n")
 
-        if self.stats['left_go'] or self.stats['right_go']:
+        if self.counts['left_go'] or self.counts['right_go']:
             # Calculate ratio of agents going when agent coming from the left
-            self.stats['left_go_ratio'] = self.stats['left_go'] / (self.stats['left_go'] + self.stats['right_go'])
+            self.ratios['left_go_ratio'] = float(self.counts['left_go']) / len(self.drivers) * 100
 
-             # Calculate ratio of agents going when agent coming from the right
-            self.stats['right_go_ratio'] = self.stats['right_go'] / (self.stats['left_go'] + self.stats['right_go'])
+            # Calculate ratio of agents going when agent coming from the right
+            self.ratios['right_go_ratio'] = float(self.counts['right_go']) / len(self.drivers) * 100
 
-        if self.stats['left_wait'] or self.stats['right_wait']:
+        if self.counts['left_wait'] or self.counts['right_wait']:
             # Calculate ratio of agents waiting when agent coming from the left
-            self.stats['left_wait_ratio'] = self.stats['left_wait'] / (self.stats['left_wait'] + self.stats['right_wait'])
+            self.ratios['left_wait_ratio'] = float(self.counts['left_wait']) / len(self.drivers) * 100
 
             # Calculate ratio of agents waiting when agent coming from the right
-            self.stats['right_wait_ratio'] = self.stats['right_wait'] / (self.stats['left_wait'] + self.stats['right_wait'])
+            self.ratios['right_wait_ratio'] = float(self.counts['right_wait']) / len(self.drivers) * 100
 
         # print("\n")
         # print ("STATS!!!!!!\n")
         # print self.stats
         # Return dict of statistics
+        self.stats = self.counts.copy()
+        self.stats.update(self.ratios)
         return self.stats
 
     # Get filename of not yet existing .csv name
@@ -94,23 +99,23 @@ class Statistics:
         )
 
         # Get latest number of existing .csv files
-        max = -1
-        #print(getcwd())
-        #print(self.csv_file[:-9])
-        for file in glob(join('statistics', self.csv_file[:-9]+'*')):  # join('statistics', self.csv_file[:-9])
-            #print(file)
-            #print(int(file[-9:-4]))
-            if int(file[-9:-4]) > max:
-                max = int(file[-9:-4])
+        maximum = -1
+        print(getcwd())
+        print(self.csv_file[:-9])
+        for file_name in glob(join('statistics', self.csv_file[:-9] + '*')):  # join('statistics', self.csv_file[:-9])
+            print(file_name)
+            print(int(file_name[-9:-4]))
+            if int(file_name[-9:-4]) > maximum:
+                maximum = int(file_name[-9:-4])
 
-        max += 1
-        max = str(max).zfill(5)
-        self.csv_file = join('statistics', self.csv_file[:-9] + max + '.csv')
+        maximum += 1
+        maximum = str(maximum).zfill(5)
+        self.csv_file = join('statistics', self.csv_file[:-9] + maximum + '.csv')
         print("New CSV file: {}\n".format(self.csv_file))
 
     # Write statistics to .csv
     def write_to_log(self):
-        # Check if csv filename is initialiased
+        # Check if csv filename is initialised
         if self.csv_file:
             # Headers need to be added if file is created
             if not isfile(self.csv_file):
@@ -122,7 +127,7 @@ class Statistics:
                 csv_stats = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
                 # Write header to file first time
-                if self.csv_exist == False:
+                if not self.csv_exist:
                     csv_stats.writeheader()
                     self.csv_exist = True
 

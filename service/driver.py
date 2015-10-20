@@ -43,7 +43,7 @@ class Driver:
             high = -1000000
             for act, util in utils.iteritems():
                 diff = util - high
-                if diff > 0 and rand.randint(0, diff) > diff / 20:
+                if diff > 0 and rand.random() > 1.0 / diff * 0.9 + 0.05:
                     # Check utility is the highest and if the difference is large enough,
                     # random noise added
                     self.act = act
