@@ -28,11 +28,12 @@ class Simulation:
         # Build model
         self.model = Model()
         self.state = None
+        self.crashes = 0
 
     # Run the simulation
     def run(self):
         # First do an intra- then an intercrossing transition
-        self.state = self.model.transintra()
+        self.state, self.crashes = self.model.transintra()
         self.model.transinter()
 
         # Set statistics

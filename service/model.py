@@ -55,6 +55,7 @@ class Model:
     def transintra(self):
         # Make a (nested) list of starting positions at the beginning of the cycle
         state = []
+        crashes = 0     # Number of crashes this cycle
 
         # Iterate over every crossing
         for crossing in [crossing for row in self.crossings for crossing in row]:
@@ -66,12 +67,14 @@ class Model:
                 crashed = sitrep.compute_outcome(actions, self.parameters.get('reward'), crossing.loc)
                 # state[-1][-1] = len(crashed)    # Also add crashed drivers to state
                 crossing.move_drivers(sitrep, crashed)
+                crashes += len(crashed)     # Add to occurrences of crashes
 
             # Ask for the state of a crossing and append to global state
             state.append(crossing.occupied())
 
         # Give global state to the simulation (GUI)
-        return state
+        # NOTE!! Division of crashes by 2 is under the assumption always two agents are involved
+        return state, crashes/2
 
     # Phase in which drivers are moved between crossings
     def transinter(self):
