@@ -8,6 +8,7 @@ __author__ = 'tom, stef, pieter'
 
 class Statistics:
     def __init__(self):
+        self.crashes = -1
         self.drivers = []
         self.counts = {'left_go': 0,
                        'right_go': 0,
@@ -30,7 +31,8 @@ class Statistics:
     def driver_update(self, driver_list):
         self.drivers = driver_list
 
-    def update(self):
+    def update(self, crashes):
+        self.crashes = crashes
         # Reset values
         for key in self.counts:
             self.counts[key] = 0
@@ -82,6 +84,7 @@ class Statistics:
         # Return dict of statistics
         self.stats = self.counts.copy()
         self.stats.update(self.ratios)
+        self.stats['crashes'] = self.crashes
         return self.stats
 
     # Get filename of not yet existing .csv name

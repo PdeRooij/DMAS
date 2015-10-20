@@ -126,7 +126,7 @@ class osc_message:
     # Sends statistics
     def do_statistics(self):
         #print("Statistics")
-        self.statistics.update()
+        self.statistics.update(self.sim.crashes)
         self.statistics.write_to_log()
 
     # Change simulation status based on message from listener

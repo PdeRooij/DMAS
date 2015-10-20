@@ -1,2 +1,2 @@
 #max_cycle,agents_num,gridx,gridy,repeat
-10000,10,3,3,10
+10000,25,3,3,1
