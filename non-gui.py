@@ -104,7 +104,7 @@ class ClientServerApp():
                 if self.repeat == self.max_repeat or self.repeat == -1:
                     # Set new params
                     self.set_params()
-                    self.repeat = 0
+                    self.repeat = 1
                 else:
                     self.repeat += 1
 
@@ -116,7 +116,7 @@ class ClientServerApp():
             else:
                 print("All simulations succesfully ran :D")
                 # Set service slow so log can be read
-                self.simuspeed(10)
+                self.simuspeed(3)
                 sys.exit()
 
         # Service is not running
