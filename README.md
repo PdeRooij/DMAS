@@ -1,6 +1,9 @@
 # DMAS
 Repository of our project for the course Design of Multi-Agent Systems. This simulation investigates whether social conventions naturally arise in a grid-based open world environment.
 
+# Website + Google Play
+http://surafusoft.eu/dmasemerge/
+
 # START
 1. python service/main.py  (This is the server running the simulation)
 2. python main.py           (GUI version to call/listen agent simulation, *needs Kivy*)
